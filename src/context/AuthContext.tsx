@@ -42,9 +42,17 @@ export const AuthProvider = ({children}: any) => {
       });
     } catch (err) {
       console.log(err.response.data);
+      dispatch({
+        type: 'addError',
+        payload: err.response.data.msg || 'Datos Incorrectos',
+      });
     }
   };
-  const removeError = () => {};
+  const removeError = () => {
+    dispatch({
+      type: 'removeError',
+    });
+  };
   const logout = () => {};
 
   return (
