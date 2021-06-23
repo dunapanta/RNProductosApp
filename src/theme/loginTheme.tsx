@@ -31,13 +31,13 @@ export const loginStyles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 30,
   },
   button: {
     borderWidth: 2,
     borderColor: 'white',
-    paddingHorizontal: 60,
-    paddingVertical: 15,
+    paddingHorizontal: 34,
+    paddingVertical: 12,
     borderRadius: 50,
     backgroundColor: Colors.secondary,
   },
@@ -47,6 +47,6 @@ export const loginStyles = StyleSheet.create({
   },
   newUserContainer: {
     alignItems: 'flex-end',
-    marginTop: 10,
+    marginTop: 14,
   },
 });

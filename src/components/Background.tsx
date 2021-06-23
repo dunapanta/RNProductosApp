@@ -11,7 +11,7 @@ export const Background = () => {
         backgroundColor: Colors.primary,
         top: -width,
         width: width * 2,
-        height: height * 1.7,
+        height: height * 1.75,
         transform: [{rotate: '-70deg'}],
       }}
     />

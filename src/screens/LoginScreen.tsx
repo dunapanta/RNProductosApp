@@ -94,7 +94,7 @@ export const LoginScreen = ({navigation}: Props) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => navigation.replace('RegisterScreen')}>
-              <Text style={loginStyles.buttonText}>Crear Crenta</Text>
+              <Text style={loginStyles.buttonText}>Crear Cuenta</Text>
             </TouchableOpacity>
           </View>
         </View>
