@@ -22,3 +22,10 @@ export interface LoginData {
   password: string;
   loading: Dispatch<SetStateAction<boolean>>;
 }
+
+export interface RegisterData {
+  nombre: string;
+  correo: string;
+  password: string;
+  loading: Dispatch<SetStateAction<boolean>>;
+}

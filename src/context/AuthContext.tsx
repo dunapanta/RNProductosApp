@@ -1,7 +1,12 @@
 import React, {createContext, useEffect, useReducer} from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {LoginData, LoginResponse, Usuario} from '../interfaces/appInterfaces';
+import {
+  LoginData,
+  LoginResponse,
+  Usuario,
+  RegisterData,
+} from '../interfaces/appInterfaces';
 import {authReducer, AuthState} from './authReducer';
 import productosApi from '../api/productosApi';
 
@@ -10,7 +15,7 @@ type AuthContextProps = {
   token: string | null;
   user: Usuario | null;
   status: 'checking' | 'authenticated' | 'not-authenticated';
-  signUp: () => void;
+  signUp: ({nombre, correo, password, loading}: RegisterData) => void;
   signIn: (loginData: LoginData) => void;
   removeError: () => void;
   logout: () => void;
@@ -64,7 +69,33 @@ export const AuthProvider = ({children}: any) => {
       }); */
   };
 
-  const signUp = async () => {};
+  const signUp = async ({nombre, correo, password, loading}: RegisterData) => {
+    loading(true);
+    try {
+      const resp = await productosApi.post<LoginResponse>('/usuarios', {
+        nombre,
+        correo,
+        password,
+      });
+      dispatch({
+        type: 'signUp',
+        payload: {
+          token: resp.data.token,
+          user: resp.data.usuario,
+        },
+      });
+
+      //Guardar token
+      await AsyncStorage.setItem('token', resp.data.token);
+    } catch (err) {
+      console.log(err.response.data);
+      dispatch({
+        type: 'addError',
+        payload: err.response.data.errors[0].msg || 'Revise la información',
+      });
+    }
+    loading(false);
+  };
   const signIn = async ({correo, password, loading}: LoginData) => {
     loading(true);
     try {

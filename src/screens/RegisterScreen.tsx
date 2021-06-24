@@ -1,5 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 import {WhiteLogo} from '../components/WhiteLogo';
@@ -16,19 +17,41 @@ import Colors from '../constants/Colors';
 import {registerImage} from '../constants/Images';
 import {useForm} from '../hooks/useForm';
 import {loginStyles} from '../theme/loginTheme';
+import {AuthContext} from '../context/AuthContext';
+import {useEffect} from 'react';
+import {RegisterButton} from '../components/RegisterButton';
 
 interface Props extends StackScreenProps<any, any> {}
 
 export const RegisterScreen = ({navigation}: Props) => {
+  const {signUp, errorMessage, removeError} = useContext(AuthContext);
   const {email, password, name, onChange} = useForm({
     name: '',
     email: '',
     password: '',
   });
 
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (errorMessage.length === 0) {
+      return;
+    }
+    if (errorMessage === 'Token no válido') {
+      return;
+    }
+
+    Alert.alert('Registro Incorrecto', errorMessage, [
+      {
+        text: 'Aceptar',
+        onPress: removeError,
+      },
+    ]);
+  }, [errorMessage]);
+
   const onRegister = () => {
-    console.log({email, password, name});
     Keyboard.dismiss();
+    signUp({nombre: name, correo: email, password, loading: setLoading});
   };
   return (
     <>
@@ -99,14 +122,7 @@ export const RegisterScreen = ({navigation}: Props) => {
             onSubmitEditing={onRegister}
           />
           {/* Boton */}
-          <View style={loginStyles.buttonContainer}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={loginStyles.button}
-              onPress={onRegister}>
-              <Text style={loginStyles.buttonText}>Crear Cuenta</Text>
-            </TouchableOpacity>
-          </View>
+          <RegisterButton onRegister={onRegister} loadingButton={loading} />
 
           {/* Crear Nueva Cuenta */}
           <View style={loginStyles.newUserContainer}>
