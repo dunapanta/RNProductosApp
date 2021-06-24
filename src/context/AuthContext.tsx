@@ -1,4 +1,6 @@
-import React, {createContext, useReducer} from 'react';
+import React, {createContext, useEffect, useReducer} from 'react';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {LoginData, LoginResponse, Usuario} from '../interfaces/appInterfaces';
 import {authReducer, AuthState} from './authReducer';
 import productosApi from '../api/productosApi';
@@ -26,6 +28,39 @@ export const AuthContext = createContext({} as AuthContextProps);
 export const AuthProvider = ({children}: any) => {
   const [state, dispatch] = useReducer(authReducer, AutInitialState);
 
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+  const checkToken = async () => {
+    const token = await AsyncStorage.getItem('token');
+
+    //Sin token
+    if (!token) return dispatch({type: 'notAuthenticathed'});
+
+    //Hay token
+    const resp = await productosApi.get('/auth');
+
+    if (resp.status !== 200) {
+      return dispatch({type: 'notAuthenticathed'});
+    }
+
+    dispatch({
+      type: 'signUp',
+      payload: {
+        token: resp.data.token,
+        user: resp.data.usuario,
+      },
+    });
+    /* AsyncStorage.getItem('token')
+      .then(token => {
+        console.log({token});
+      })
+      .catch(err => {
+        console.log({err});
+      }); */
+  };
+
   const signUp = async () => {};
   const signIn = async ({correo, password}: LoginData) => {
     try {
@@ -40,6 +75,9 @@ export const AuthProvider = ({children}: any) => {
           user: resp.data.usuario,
         },
       });
+
+      //Guardar token
+      await AsyncStorage.setItem('token', resp.data.token);
     } catch (err) {
       console.log(err.response.data);
       dispatch({
@@ -53,6 +91,7 @@ export const AuthProvider = ({children}: any) => {
       type: 'removeError',
     });
   };
+
   const logout = () => {};
 
   return (
