@@ -97,7 +97,10 @@ export const AuthProvider = ({children}: any) => {
     });
   };
 
-  const logout = () => {};
+  const logout = async () => {
+    await AsyncStorage.removeItem('token');
+    dispatch({type: 'logout'});
+  };
 
   return (
     <AuthContext.Provider

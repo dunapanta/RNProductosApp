@@ -37,6 +37,9 @@ export const LoginScreen = ({navigation}: Props) => {
     if (errorMessage.length === 0) {
       return;
     }
+    /* if (errorMessage === 'Token no válido') {
+      return;
+    } */
 
     Alert.alert('Login Incorrecto', errorMessage, [
       {
@@ -47,11 +50,8 @@ export const LoginScreen = ({navigation}: Props) => {
   }, [errorMessage]);
 
   const onLogin = () => {
-
     Keyboard.dismiss();
     signIn({correo: email, password, loading: setLoading});
-
-  
   };
   return (
     <>
