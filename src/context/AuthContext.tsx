@@ -65,7 +65,8 @@ export const AuthProvider = ({children}: any) => {
   };
 
   const signUp = async () => {};
-  const signIn = async ({correo, password}: LoginData) => {
+  const signIn = async ({correo, password, loading}: LoginData) => {
+    loading(true);
     try {
       const resp = await productosApi.post<LoginResponse>('/auth/login', {
         correo,
@@ -88,6 +89,7 @@ export const AuthProvider = ({children}: any) => {
         payload: err.response.data.msg || 'Datos Incorrectos',
       });
     }
+    loading(false);
   };
   const removeError = () => {
     dispatch({

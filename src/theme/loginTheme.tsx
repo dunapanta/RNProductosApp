@@ -41,6 +41,14 @@ export const loginStyles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: Colors.secondary,
   },
+  buttonDisabled: {
+    borderWidth: 2,
+    borderColor: 'white',
+    paddingHorizontal: 41,
+    paddingVertical: 9,
+    borderRadius: 50,
+    backgroundColor: Colors.secondaryLigth,
+  },
   buttonText: {
     fontSize: 18,
     color: 'white',

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   StatusBar,
@@ -8,7 +8,9 @@ import {
   Platform,
   KeyboardAvoidingView,
   Keyboard,
+  Alert,
 } from 'react-native';
+import {StackScreenProps} from '@react-navigation/stack';
 
 import {Background} from '../components/Background';
 import {WhiteLogo} from '../components/WhiteLogo';
@@ -16,9 +18,8 @@ import Colors from '../constants/Colors';
 import {loginImage} from '../constants/Images';
 import {loginStyles} from '../theme/loginTheme';
 import {useForm} from '../hooks/useForm';
-import {StackScreenProps} from '@react-navigation/stack';
 import {AuthContext} from '../context/AuthContext';
-import {Alert} from 'react-native';
+import {AuthButton} from '../components/AuthButton';
 
 interface Props extends StackScreenProps<any, any> {}
 
@@ -29,6 +30,8 @@ export const LoginScreen = ({navigation}: Props) => {
     email: '',
     password: '',
   });
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (errorMessage.length === 0) {
@@ -44,9 +47,11 @@ export const LoginScreen = ({navigation}: Props) => {
   }, [errorMessage]);
 
   const onLogin = () => {
-    Keyboard.dismiss();
 
-    signIn({correo: email, password});
+    Keyboard.dismiss();
+    signIn({correo: email, password, loading: setLoading});
+
+  
   };
   return (
     <>
@@ -98,14 +103,7 @@ export const LoginScreen = ({navigation}: Props) => {
             onSubmitEditing={onLogin}
           />
           {/* Boton */}
-          <View style={loginStyles.buttonContainer}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={loginStyles.button}
-              onPress={onLogin}>
-              <Text style={loginStyles.buttonText}>Login</Text>
-            </TouchableOpacity>
-          </View>
+          <AuthButton onLogin={onLogin} loadingButton={loading} />
 
           {/* Crear Nueva Cuenta */}
           <View style={loginStyles.newUserContainer}>
