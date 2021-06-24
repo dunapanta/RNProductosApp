@@ -45,6 +45,9 @@ export const AuthProvider = ({children}: any) => {
       return dispatch({type: 'notAuthenticathed'});
     }
 
+    //El Backend genera un nuevo token cuando sellama a /auth por eso lo guardo
+    await AsyncStorage.setItem('token', resp.data.token);
+
     dispatch({
       type: 'signUp',
       payload: {
