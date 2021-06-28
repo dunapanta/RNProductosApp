@@ -20,7 +20,32 @@ export const ProductContext = createContext({} as ProductsContextProps);
 
 export const ProductProvider = ({children}: any) => {
   const [products, setProducts] = useState<Producto[]>([]);
+
+  const loadProducts = async () => {};
+  const addProduct = async (categoryId: string, productName: string) => {};
+  const updateProduct = async (
+    categoryId: string,
+    productName: string,
+    productId: string,
+  ) => {};
+  const deleteProduct = async (id: string) => {};
+  const loadProductById = async (id: string) => {
+    throw new Error('Not implemented');
+  };
+  const uploadImage = async (data: any, id: string) => {};
+
   return (
-    <ProductContext.Provider value={{}}>{children}</ProductContext.Provider>
+    <ProductContext.Provider
+      value={{
+        products,
+        loadProducts,
+        addProduct,
+        updateProduct,
+        deleteProduct,
+        loadProductById,
+        uploadImage,
+      }}>
+      {children}
+    </ProductContext.Provider>
   );
 };
