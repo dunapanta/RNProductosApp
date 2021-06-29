@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {View, Text, StyleSheet, ScrollView, StatusBar} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {FilterList} from '../components/FilterList';
 import {HeaderProducts} from '../components/HeaderProducts';
 import {SearchInput} from '../components/SearchInput';
 
@@ -11,7 +12,7 @@ export const ProductsScreen = () => {
   const {products, loadProducts} = useContext(ProductContext);
 
   const {top} = useSafeAreaInsets();
-  const categorias = ['Todos', 'Populares', 'Más Vendidos', 'Mejor Puntuados'];
+
   console.log(top);
   return (
     <View style={{top: top + 5, ...styles.container}}>
@@ -19,6 +20,7 @@ export const ProductsScreen = () => {
       <HeaderProducts />
       <ScrollView showsVerticalScrollIndicator={false}>
         <SearchInput />
+        <FilterList />
       </ScrollView>
     </View>
   );
