@@ -1,5 +1,12 @@
 import React from 'react';
-import {StyleSheet, View, Text, useWindowDimensions, Image} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  useWindowDimensions,
+  Image,
+  Animated,
+} from 'react-native';
 import {color} from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -9,18 +16,39 @@ import {Producto} from '../interfaces/appInterfaces';
 interface Props {
   product: Producto;
   index: number;
+  scrollX: Animated.Value;
 }
 
-export const CardProduct = ({product, index}: Props) => {
+export const CardProduct = ({product, index, scrollX}: Props) => {
   const {width, height} = useWindowDimensions();
+
+  // animate prev to current and next card
+  const inputRange = [
+    (index - 1) * (width / 1.9),
+    index * (width / 1.9),
+    (index + 1) * (width / 1.9),
+  ];
+
+  // animate opacity
+  const opacity = scrollX.interpolate({inputRange, outputRange: [0.7, 0, 0.7]});
+
+  //scale
+  const scale = scrollX.interpolate({inputRange, outputRange: [0.8, 1, 0.8]});
+
   return (
-    <View style={{...styles.card, width: width / 1.9, height: height / 2.8}}>
-      <View
+    <Animated.View
+      style={{
+        ...styles.card,
+        width: width / 1.9,
+        height: height / 2.8,
+        transform: [{scale}],
+      }}>
+      <Animated.View
         style={{
           ...styles.cardOverlay,
           width: width / 1.9,
           height: height / 2.8,
-          opacity: 0
+          opacity,
         }}
       />
       <View style={{...styles.priceTag, height: height / 16, width: width / 5}}>
@@ -78,7 +106,7 @@ export const CardProduct = ({product, index}: Props) => {
           </Text>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
