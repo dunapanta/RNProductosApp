@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, ScrollView, StatusBar} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FilterList} from '../components/FilterList';
 import {HeaderProducts} from '../components/HeaderProducts';
+import {ProductsList} from '../components/ProductsList';
 import {SearchInput} from '../components/SearchInput';
 
 import Colors from '../constants/Colors';
@@ -21,6 +22,7 @@ export const ProductsScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <SearchInput />
         <FilterList />
+        <ProductsList products={products} />
       </ScrollView>
     </View>
   );
