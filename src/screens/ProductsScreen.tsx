@@ -24,7 +24,7 @@ export const ProductsScreen = () => {
         <SearchInput />
         <FilterList />
         <ProductsList products={products} />
-        <LastProductsList />
+        <LastProductsList products={products} />
       </ScrollView>
     </View>
   );

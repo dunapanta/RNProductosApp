@@ -1,8 +1,15 @@
 import React from 'react';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
-import Colors from '../constants/Colors';
 
-export const LastProductsList = () => {
+import Colors from '../constants/Colors';
+import {Producto} from '../interfaces/appInterfaces';
+import {LastProductCard} from './LastProductCard';
+
+interface Props {
+  products: Producto[];
+}
+
+export const LastProductsList = ({products}: Props) => {
   return (
     <View>
       <View style={styles.container}>
@@ -10,10 +17,13 @@ export const LastProductsList = () => {
         <Text style={styles.textShow}>Mostrar Todos</Text>
       </View>
       <FlatList
+        data={products}
+        keyExtractor={item => item._id}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.flatListStyle}
-        data={}
+        //data={}
+        renderItem={({item}) => <LastProductCard product={item} />}
       />
     </View>
   );
