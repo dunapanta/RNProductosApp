@@ -6,22 +6,32 @@ import {
   useWindowDimensions,
   Image,
   Animated,
+  TouchableOpacity,
 } from 'react-native';
 import {color} from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import Colors from '../constants/Colors';
 import {Producto} from '../interfaces/appInterfaces';
+import {StackScreenProps} from '@react-navigation/stack';
+import {ProductStackParams} from '../navigation/ProductsNavigator';
+import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   product: Producto;
   index: number;
   scrollX: Animated.Value;
+  activeCardIndex: number;
 }
 
-export const CardProduct = ({product, index, scrollX}: Props) => {
+export const CardProduct = ({
+  product,
+  index,
+  scrollX,
+  activeCardIndex,
+}: Props) => {
   const {width, height} = useWindowDimensions();
-
+  const {navigate} = useNavigation();
   // animate prev to current and next card
   const inputRange = [
     (index - 1) * (width / 1.9),
@@ -36,77 +46,83 @@ export const CardProduct = ({product, index, scrollX}: Props) => {
   const scale = scrollX.interpolate({inputRange, outputRange: [0.8, 1, 0.8]});
 
   return (
-    <Animated.View
-      style={{
-        ...styles.card,
-        width: width / 1.9,
-        height: height / 2.8,
-        transform: [{scale}],
-      }}>
+    <TouchableOpacity
+      disabled={activeCardIndex !== index}
+      activeOpacity={1}
+      onPress={() => navigate('ProductScreen', product)}>
       <Animated.View
         style={{
-          ...styles.cardOverlay,
+          ...styles.card,
           width: width / 1.9,
           height: height / 2.8,
-          opacity,
-        }}
-      />
-      <View style={{...styles.priceTag, height: height / 16, width: width / 5}}>
-        <Text
+          transform: [{scale}],
+        }}>
+        <Animated.View
           style={{
-            ...styles.priceTagText,
-          }}>
-          ${product.precio}
-        </Text>
-      </View>
-      {product.img ? (
-        <Image
-          source={{uri: product.img}}
-          style={{...styles.cardImg, height: height / 3.8}}
+            ...styles.cardOverlay,
+            width: width / 1.9,
+            height: height / 2.8,
+            opacity,
+          }}
         />
-      ) : (
-        <Image
-          source={require('../assets/noImage.png')}
-          style={{...styles.cardImg, height: height / 3.8}}
-        />
-      )}
-      <View style={{...styles.cardDetails, height: height / 8}}>
-        <View style={styles.cardHeader}>
-          <View>
-            <Text style={styles.productName} numberOfLines={1}>
-              {product.nombre.length <= 13
-                ? product.nombre
-                : product.nombre.slice(0, 12) + '...'}
-            </Text>
-            <Text
-              style={{...styles.categoryName, marginTop: height / 200}}
-              numberOfLines={1}>
-              {product.categoria.nombre.length <= 20
-                ? product.categoria.nombre
-                : product.categoria.nombre.slice(0, 19) + '...'}
-            </Text>
-          </View>
-          <Icon name="star-outline" size={26} color={Colors.primary} />
-        </View>
-        <View style={{flexDirection: 'row', marginTop: height / 200}}>
+        <View
+          style={{...styles.priceTag, height: height / 16, width: width / 5}}>
           <Text
             style={{
-              fontSize: 13,
-              fontWeight: 'bold',
-              color: Colors.secondaryDark,
+              ...styles.priceTagText,
             }}>
-            Publicado por:{' '}
-          </Text>
-          <Text
-            style={{fontSize: 13, color: Colors.secondaryDark}}
-            numberOfLines={1}>
-            {product.usuario.nombre.length < 11
-              ? product.usuario.nombre
-              : product.usuario.nombre.slice(0, 10) + '...'}
+            ${product.precio}
           </Text>
         </View>
-      </View>
-    </Animated.View>
+        {product.img ? (
+          <Image
+            source={{uri: product.img}}
+            style={{...styles.cardImg, height: height / 3.8}}
+          />
+        ) : (
+          <Image
+            source={require('../assets/noImage.png')}
+            style={{...styles.cardImg, height: height / 3.8}}
+          />
+        )}
+        <View style={{...styles.cardDetails, height: height / 8}}>
+          <View style={styles.cardHeader}>
+            <View>
+              <Text style={styles.productName} numberOfLines={1}>
+                {product.nombre.length <= 13
+                  ? product.nombre
+                  : product.nombre.slice(0, 12) + '...'}
+              </Text>
+              <Text
+                style={{...styles.categoryName, marginTop: height / 200}}
+                numberOfLines={1}>
+                {product.categoria.nombre.length <= 20
+                  ? product.categoria.nombre
+                  : product.categoria.nombre.slice(0, 19) + '...'}
+              </Text>
+            </View>
+            <Icon name="star-outline" size={26} color={Colors.primary} />
+          </View>
+          <View style={{flexDirection: 'row', marginTop: height / 200}}>
+            <Text
+              style={{
+                fontSize: 13,
+                fontWeight: 'bold',
+                color: Colors.secondaryDark,
+              }}>
+              Publicado por:{' '}
+            </Text>
+            <Text
+              style={{fontSize: 13, color: Colors.secondaryDark}}
+              numberOfLines={1}>
+              {product.usuario.nombre.length < 11
+                ? product.usuario.nombre
+                : product.usuario.nombre.slice(0, 10) + '...'}
+            </Text>
+          </View>
+        </View>
+      </Animated.View>
+    </TouchableOpacity>
   );
 };
 

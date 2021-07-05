@@ -10,6 +10,8 @@ interface Props {
 }
 
 export const LastProductsList = ({products}: Props) => {
+  const lastProducts = [...products];
+
   return (
     <View>
       <View style={styles.container}>
@@ -17,7 +19,7 @@ export const LastProductsList = ({products}: Props) => {
         <Text style={styles.textShow}>Mostrar Todos</Text>
       </View>
       <FlatList
-        data={products}
+        data={lastProducts.reverse()}
         keyExtractor={item => item._id}
         horizontal
         showsHorizontalScrollIndicator={false}

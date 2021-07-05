@@ -17,18 +17,18 @@ export const LastProductCard = ({product}: Props) => {
         <Image source={require('../assets/noImage.png')} style={styles.image} />
       )}
       <View style={styles.textContainer}>
-        {product.nombre.length < 16 ? (
+        {product.nombre.length < 15 ? (
           <Text style={styles.text}>{product.nombre}</Text>
         ) : (
-          <Text style={styles.text}>{product.nombre.substr(0, 15) + '..'}</Text>
+          <Text style={styles.text}>{product.nombre.substr(0, 14) + '..'}</Text>
         )}
 
         {/* Categoria */}
-        {product.categoria.nombre.length < 18 ? (
+        {product.categoria.nombre.length < 17 ? (
           <Text style={styles.smallText}>{product.categoria.nombre}</Text>
         ) : (
           <Text style={styles.smallText}>
-            {product.categoria.nombre.substr(0, 20) + '..'}
+            {product.categoria.nombre.substr(0, 17) + '..'}
           </Text>
         )}
       </View>
@@ -38,7 +38,7 @@ export const LastProductCard = ({product}: Props) => {
 
 const styles = StyleSheet.create({
   card: {
-    height: 120,
+    height: 130,
     width: 120,
     backgroundColor: 'white',
     marginHorizontal: 10,

@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {useWindowDimensions} from 'react-native';
 import {Animated, FlatList, View} from 'react-native';
 import {Producto} from '../interfaces/appInterfaces';
@@ -10,6 +10,7 @@ interface Props {
 
 export const ProductsList = ({products}: Props) => {
   const scrollX = useRef(new Animated.Value(0)).current;
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
   const {width} = useWindowDimensions();
   return (
     <View>
@@ -24,7 +25,12 @@ export const ProductsList = ({products}: Props) => {
         }}
         showsHorizontalScrollIndicator={false}
         renderItem={({item, index}) => (
-          <CardProduct product={item} index={index} scrollX={scrollX} />
+          <CardProduct
+            product={item}
+            index={index}
+            scrollX={scrollX}
+            activeCardIndex={activeCardIndex}
+          />
         )}
         //Animation
         onScroll={Animated.event(
@@ -32,6 +38,16 @@ export const ProductsList = ({products}: Props) => {
           {useNativeDriver: true},
         )}
         snapToInterval={width / 1.9}
+        /* Clic just on Active Card */
+        onMomentumScrollEnd={e => {
+          // active card 1, 2, 3 ...
+          /* console.log(
+            Math.round(e.nativeEvent.contentOffset.x / (width / 1.9)),
+          ); */
+          setActiveCardIndex(
+            Math.round(e.nativeEvent.contentOffset.x / (width / 1.9)),
+          );
+        }}
       />
     </View>
   );
