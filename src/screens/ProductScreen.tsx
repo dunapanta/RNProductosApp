@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
+import {TouchableOpacity} from 'react-native';
 
 interface Props extends StackScreenProps<any, any> {}
 export const ProductScreen = ({navigation, route}: Props) => {
@@ -40,6 +41,40 @@ export const ProductScreen = ({navigation, route}: Props) => {
           <Icon name="checkbox-outline" size={40} color={Colors.primary} />
         </View>
       </ImageBackground>
+      <View>
+        <View style={styles.iconContainer}>
+          <Icon name="pencil-outline" color="white" size={30} />
+        </View>
+        <View style={styles.productInfo}>
+          <Text style={styles.productName}>{product.nombre}</Text>
+          <Text style={styles.categoryName}>{product.categoria.nombre}</Text>
+
+          {/* User and availability */}
+          <View style={styles.userAvailavilityContainer}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.publish}>Publicado por:</Text>
+              <Text style={styles.user}> {product.usuario.nombre}</Text>
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <Icon name="checkbox-outline" size={18} color={Colors.primary} />
+              <Text style={styles.user}> Disponible</Text>
+            </View>
+          </View>
+          {/* Details Producto */}
+          <View style={styles.detailsProduct}>
+            <Text style={styles.detailsText}>{product.descripcion}</Text>
+          </View>
+        </View>
+        <View style={styles.priceContainer}>
+          <Text style={styles.priceText}>Precio por Producto</Text>
+          <View style={styles.priceTag}>
+            <Text style={styles.price}>${product.precio}</Text>
+          </View>
+        </View>
+        <TouchableOpacity
+          style={styles.btn}
+          activeOpacity={0.8}></TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
@@ -61,5 +96,84 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 30,
     justifyContent: 'space-between',
+  },
+  iconContainer: {
+    position: 'absolute',
+    height: 60,
+    width: 60,
+    backgroundColor: Colors.primary,
+    top: -35,
+    right: 20,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  productInfo: {
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  productName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  categoryName: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: Colors.secondaryDark,
+    marginTop: 5,
+  },
+  userAvailavilityContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+    justifyContent: 'space-between',
+  },
+  publish: {
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  user: {
+    fontSize: 15,
+  },
+  detailsProduct: {
+    marginTop: 20,
+  },
+  detailsText: {
+    lineHeight: 20,
+    color: Colors.secondaryLigth,
+  },
+  priceContainer: {
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 20,
+    alignItems: 'center',
+  },
+  priceText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  priceTag: {
+    height: 40,
+    alignItems: 'center',
+    marginLeft: 30,
+    paddingLeft: 30,
+    flex: 1,
+    backgroundColor: Colors.primaryLigth,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    flexDirection: 'row',
+  },
+  price: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  btn: {
+    marginTop: 40,
+    height: 55,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.primary,
+    marginHorizontal: 20,
+    borderRadius: 10,
   },
 });
