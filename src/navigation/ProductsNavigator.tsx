@@ -2,10 +2,18 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {ProductsScreen} from '../screens/ProductsScreen';
 import {ProductScreen} from '../screens/ProductScreen';
+import {AddingProductScreen} from '../screens/AddingProductScreen';
 
 export type ProductStackParams = {
   ProductsScreen: undefined;
   ProductScreen: {
+    id?: string;
+    name?: string;
+    precio?: Number;
+    description?: string;
+    img?: string;
+  };
+  AddingProductScreen: {
     id?: string;
     name?: string;
     precio?: Number;
@@ -27,6 +35,10 @@ export const ProductsNavigator = () => {
       }}>
       <Stack.Screen name="ProductsScreen" component={ProductsScreen} />
       <Stack.Screen name="ProductScreen" component={ProductScreen} />
+      <Stack.Screen
+        name="AddingProductScreen"
+        component={AddingProductScreen}
+      />
     </Stack.Navigator>
   );
 };

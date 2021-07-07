@@ -3,8 +3,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 import Colors from '../constants/Colors';
+import {useNavigation} from '@react-navigation/native';
 
 export const HeaderProducts = () => {
+  const {navigate} = useNavigation();
   return (
     <View style={styles.header}>
       <View style={styles.textCointainer}>
@@ -16,9 +18,16 @@ export const HeaderProducts = () => {
           </Text>
         </View>
       </View>
-      <View>
+      {/* Buttons */}
+      <View style={{flexDirection: 'row'}}>
+        <TouchableOpacity
+          style={{marginTop: 10, marginRight: 5}}
+          activeOpacity={0.7}
+          onPress={() => navigate('AddingProductScreen', {})}>
+          <Icon name="add-outline" size={46} color={Colors.primary} />
+        </TouchableOpacity>
         <TouchableOpacity style={{marginTop: 10}} activeOpacity={0.7}>
-          <Icon name="person-outline" size={50} color={Colors.primary} />
+          <Icon name="person-outline" size={40} color={Colors.primary} />
         </TouchableOpacity>
       </View>
     </View>

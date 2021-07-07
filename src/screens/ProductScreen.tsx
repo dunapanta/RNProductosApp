@@ -12,8 +12,9 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
 import {TouchableOpacity} from 'react-native';
+import {ProductStackParams} from '../navigation/ProductsNavigator';
 
-interface Props extends StackScreenProps<any, any> {}
+interface Props extends StackScreenProps<ProductStackParams, 'ProductScreen'> {}
 export const ProductScreen = ({navigation, route}: Props) => {
   const product = route.params as Producto;
 
@@ -43,7 +44,16 @@ export const ProductScreen = ({navigation, route}: Props) => {
       </ImageBackground>
       <View>
         <View style={styles.iconContainer}>
-          <Icon name="pencil-outline" color="white" size={30} />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.navigate('AddingProductScreen', {
+                id: product._id,
+                name: product.nombre,
+              });
+            }}>
+            <Icon name="pencil-outline" color="white" size={30} />
+          </TouchableOpacity>
         </View>
         <View style={styles.productInfo}>
           <Text style={styles.productName}>{product.nombre}</Text>
@@ -71,9 +81,9 @@ export const ProductScreen = ({navigation, route}: Props) => {
             <Text style={styles.price}>${product.precio}</Text>
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.btn}
-          activeOpacity={0.8}></TouchableOpacity>
+        <TouchableOpacity style={styles.btn} activeOpacity={0.8}>
+          <Text style={styles.btnText}>Ordenar Producto</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -175,5 +185,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     marginHorizontal: 20,
     borderRadius: 10,
+  },
+  btnText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
