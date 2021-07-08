@@ -50,6 +50,7 @@ export const ProductScreen = ({navigation, route}: Props) => {
               navigation.navigate('AddingProductScreen', {
                 id: product._id,
                 name: product.nombre,
+                img: product.img,
               });
             }}>
             <Icon name="pencil-outline" color="white" size={30} />
