@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useContext} from 'react';
 import {
   View,
   Text,
@@ -32,8 +32,6 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
 
   /* Context para obtener info del producto */
   const {loadProductById} = useContext(ProductContext);
-
-  const [selectedLanguage, setSelectedLanguage] = useState();
 
   const {isLoading, categories} = useCategories();
 
@@ -99,22 +97,33 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
           {isLoading ? (
             <ActivityIndicator size={40} color={Colors.primary} />
           ) : (
-            <Picker
-              selectedValue={selectedLanguage}
-              style={{color: Colors.secondaryDark}}
-              dropdownIconColor={Colors.secondaryDark}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedLanguage(itemValue)
-              }>
-              {categories.map(category => (
-                <Picker.Item
-                  key={category._id}
-                  label={category.nombre}
-                  value={category.nombre}
-                  style={{color: Colors.secondaryDark}}
-                />
-              ))}
-            </Picker>
+            <View style={{flex: 1}}>
+              <Picker
+                selectedValue={categoriaId}
+                //style={{color: Colors.secondaryDark}}
+                dropdownIconColor={Colors.secondaryDark}
+                onValueChange={itemValue => onChange(itemValue, 'categoriaId')}>
+                {categories.map(category => (
+                  <Picker.Item
+                    key={category._id}
+                    label={category.nombre}
+                    value={category._id}
+                    //style={{color: Colors.secondaryDark}}
+                  />
+                ))}
+              </Picker>
+              {/* Toca poner este text porque en android crashea en esta version del picker */}
+              <Text
+                style={{
+                  width: '100%',
+                  height: 60,
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                }}>
+                {' '}
+              </Text>
+            </View>
           )}
           <Text style={styles.label}>Imagen del Producto:</Text>
 
