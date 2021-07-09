@@ -51,6 +51,8 @@ export const ProductScreen = ({navigation, route}: Props) => {
                 id: product._id,
                 name: product.nombre,
                 img: product.img,
+                precio: product.precio,
+                description: product.descripcion,
               });
             }}>
             <Icon name="pencil-outline" color="white" size={30} />

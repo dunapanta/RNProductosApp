@@ -1,18 +1,27 @@
-import React from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TextInput,
+  Image,
   TouchableOpacity,
+  ActivityIndicator,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ProductStackParams} from '../navigation/ProductsNavigator';
-import Colors from '../constants/Colors';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Image} from 'react-native';
+
+import Colors from '../constants/Colors';
+import {useCategories} from '../hooks/useCategories';
+import {useForm} from '../hooks/useForm';
+import {ProductContext} from '../context/ProductContext';
+import {useEffect} from 'react';
 
 interface Props
   extends StackScreenProps<ProductStackParams, 'AddingProductScreen'> {}
@@ -20,60 +29,152 @@ interface Props
 export const AddingProductScreen = ({route, navigation}: Props) => {
   const {top} = useSafeAreaInsets();
   const product = route.params;
+
+  /* Context para obtener info del producto */
+  const {loadProductById} = useContext(ProductContext);
+
+  const [selectedLanguage, setSelectedLanguage] = useState();
+
+  const {isLoading, categories} = useCategories();
+
+  const {
+    id,
+    categoriaId,
+    nombre,
+    img,
+    precio,
+    descripcion,
+    form,
+    onChange,
+    setFormValue,
+  } = useForm({
+    id: product.id || '',
+    categoriaId: '',
+    nombre: product.name || '',
+    img: product.img || '',
+    precio: product.precio || 0,
+    descripcion: product.description || '',
+  });
+
+  useEffect(() => {
+    loadProduct();
+  }, []);
+
+  const loadProduct = async () => {
+    if (id.length === 0) {
+      return;
+    }
+    const product = await loadProductById(id);
+    setFormValue({
+      id,
+      nombre,
+      categoriaId: product.categoria._id,
+      descripcion,
+      img,
+      precio,
+    });
+  };
+
   return (
     <View style={{...styles.container, top: top}}>
       <Text style={styles.productText}>
-        {product.name ? product.name : 'Nuevo Producto'}
+        {product.name ? product.name : 'Nuevo del producto'}
       </Text>
-      <ScrollView>
-        <Text style={styles.label}>Nombre del producto:</Text>
-        <View style={styles.searchInput}>
-          <TextInput placeholder="Nombre Producto" style={styles.textInput} />
-        </View>
-
-        <Text style={styles.label}>Categoría:</Text>
-        <Text style={styles.label}>Imagen Producto:</Text>
-
-        {/*  Preview Image */}
-        <View style={styles.previewImage}>
-          <Image
-            style={{height: '100%', width: '100%'}}
-            source={
-              product.img
-                ? {uri: product.img}
-                : require('../assets/noImage.png')
-            }
-          />
-        </View>
-
-        {/* Image upload Buttons */}
-        <View style={styles.imgButtons}>
-          <TouchableOpacity style={styles.uploadButtons} activeOpacity={0.8}>
-            <Icon
-              size={22}
-              style={{marginRight: 10}}
-              color="white"
-              name="image-outline"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Nombre Producto */}
+          <Text style={styles.label}>Nombre del producto:</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Nombre Producto"
+              style={styles.textInput}
+              value={nombre}
+              onChangeText={value => onChange(value, 'nombre')}
             />
-            <Text style={styles.btnText}>Galería</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.uploadButtons} activeOpacity={0.8}>
-            <Icon
-              size={22}
-              style={{marginRight: 10}}
-              color="white"
-              name="camera-outline"
-            />
-            <Text style={styles.btnText}>Cámara</Text>
-          </TouchableOpacity>
-        </View>
+          </View>
 
-        <TouchableOpacity style={styles.btn} activeOpacity={0.8}>
-          <Text style={styles.btnText}>
-            {product.id ? 'Actualizar Producto' : 'Crear Producto'}
+          {/* Picker Categorias */}
+          <Text style={styles.label}>Categoría del Producto:</Text>
+          {isLoading ? (
+            <ActivityIndicator size={40} color={Colors.primary} />
+          ) : (
+            <Picker
+              selectedValue={selectedLanguage}
+              style={{color: Colors.secondaryDark}}
+              dropdownIconColor={Colors.secondaryDark}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedLanguage(itemValue)
+              }>
+              {categories.map(category => (
+                <Picker.Item
+                  key={category._id}
+                  label={category.nombre}
+                  value={category.nombre}
+                  style={{color: Colors.secondaryDark}}
+                />
+              ))}
+            </Picker>
+          )}
+          <Text style={styles.label}>Imagen del Producto:</Text>
+
+          {/*  Preview Image */}
+          <View style={styles.previewImage}>
+            <Image
+              style={{height: '100%', width: '100%'}}
+              source={img ? {uri: img} : require('../assets/noImage.png')}
+            />
+          </View>
+
+          {/* Image upload Buttons */}
+          <View style={styles.imgButtons}>
+            <TouchableOpacity style={styles.uploadButtons} activeOpacity={0.8}>
+              <Icon
+                size={22}
+                style={{marginRight: 10}}
+                color="white"
+                name="image-outline"
+              />
+              <Text style={styles.btnText}>Galería</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.uploadButtons} activeOpacity={0.8}>
+              <Icon
+                size={22}
+                style={{marginRight: 10}}
+                color="white"
+                name="camera-outline"
+              />
+              <Text style={styles.btnText}>Cámara</Text>
+            </TouchableOpacity>
+          </View>
+          {/* Precio */}
+          <Text style={styles.label}>Precio del Producto:</Text>
+          <View style={{...styles.inputContainer, marginRight: 140}}>
+            <TextInput placeholder="$" style={styles.textInput} />
+          </View>
+
+          {/* Descripcion */}
+          <Text style={styles.label}>Descripción del Producto:</Text>
+          <View style={{...styles.inputContainer, height: 200}}>
+            <TextInput
+              multiline
+              numberOfLines={4}
+              placeholder="Ingrese la descripción del producto"
+              style={styles.textInput}
+            />
+          </View>
+
+          <TouchableOpacity style={styles.btn} activeOpacity={0.8}>
+            <Text style={styles.btnText}>
+              {product.id ? 'Actualizar Producto' : 'Crear Producto'}
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={{fontSize: 15, marginBottom: 150}}>
+            {JSON.stringify(form, null, 5)}
           </Text>
-        </TouchableOpacity>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -82,7 +183,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     //justifyContent: 'center',
-    marginHorizontal: 30,
+    marginHorizontal: 26,
   },
   productText: {
     fontSize: 30,
@@ -96,7 +197,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  searchInput: {
+  inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 50,
@@ -133,6 +234,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     marginHorizontal: 20,
     borderRadius: 10,
+    marginBottom: 100,
   },
 
   uploadButtons: {
