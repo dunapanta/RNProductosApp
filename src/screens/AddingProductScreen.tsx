@@ -31,7 +31,8 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
   const product = route.params;
 
   /* Context para obtener info del producto */
-  const {loadProductById} = useContext(ProductContext);
+  const {loadProductById, addProduct, updateProduct} =
+    useContext(ProductContext);
 
   const {isLoading, categories} = useCategories();
 
@@ -73,10 +74,20 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
     });
   };
 
+  const saveOrUpdate = () => {
+    if (id.length > 0) {
+      updateProduct(categoriaId, nombre, id, Number(precio), descripcion);
+    } else {
+      // Si usuario no movio picker seleciona el id de la primera categoria
+      const temCatId = categoriaId || categories[0]._id;
+      addProduct(temCatId, nombre, Number(precio), descripcion);
+    }
+  };
+
   return (
     <View style={{...styles.container, top: top}}>
       <Text style={styles.productText}>
-        {product.name ? product.name : 'Nuevo del producto'}
+        {product.name ? product.name : 'Nuevo Producto'}
       </Text>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -164,7 +175,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
               keyboardType="decimal-pad"
               style={styles.textInput}
               value={precio.toString()}
-              maxLength={6}
+              maxLength={5}
               onChangeText={value =>
                 onChange(value.replace(/[^0-9]/g, ''), 'precio')
               }
@@ -184,7 +195,10 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
             />
           </View>
 
-          <TouchableOpacity style={styles.btn} activeOpacity={0.8}>
+          <TouchableOpacity
+            style={styles.btn}
+            activeOpacity={0.8}
+            onPress={saveOrUpdate}>
             <Text style={styles.btnText}>
               {product.id ? 'Actualizar Producto' : 'Crear Producto'}
             </Text>

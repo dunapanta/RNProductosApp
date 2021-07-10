@@ -7,11 +7,20 @@ import {Producto, ProductsResponse} from '../interfaces/appInterfaces';
 type ProductsContextProps = {
   products: Producto[];
   loadProducts: () => Promise<void>;
-  addProduct: (categoryId: string, productName: string) => Promise<void>;
+  addProduct: (
+    categoryId: string,
+    productName: string,
+    productPrice: number,
+    productDescription: string,
+    //ProductImg: string,
+  ) => Promise<void>;
   updateProduct: (
     categoryId: string,
     productName: string,
     productId: string,
+    productPrice: number,
+    productDescription: string,
+    //ProductImg: string,
   ) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
   loadProductById: (id: string) => Promise<Producto>;
@@ -33,12 +42,36 @@ export const ProductProvider = ({children}: any) => {
     );
     setProducts([...products, ...resp.data.productos]);
   };
-  const addProduct = async (categoryId: string, productName: string) => {};
+  const addProduct = async (
+    categoryId: string,
+    productName: string,
+    productPrice: number,
+    productDescription: string,
+  ) => {
+    console.log('addProduct');
+    console.log({
+      categoryId,
+      productName,
+      productPrice,
+      productDescription,
+    });
+  };
   const updateProduct = async (
     categoryId: string,
     productName: string,
     productId: string,
-  ) => {};
+    productPrice: number,
+    productDescription: string,
+  ) => {
+    console.log('updateProduct');
+    console.log({
+      categoryId,
+      productName,
+      productId,
+      productPrice,
+      productDescription,
+    });
+  };
   const deleteProduct = async (id: string) => {};
 
   const loadProductById = async (id: string): Promise<Producto> => {
