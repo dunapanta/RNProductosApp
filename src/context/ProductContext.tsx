@@ -48,13 +48,13 @@ export const ProductProvider = ({children}: any) => {
     productPrice: number,
     productDescription: string,
   ) => {
-    console.log('addProduct');
-    console.log({
-      categoryId,
-      productName,
-      productPrice,
-      productDescription,
+    const resp = await productosApi.post<Producto>('/productos', {
+      nombre: productName,
+      precio: productPrice,
+      descripcion: productDescription,
+      categoria: categoryId,
     });
+    setProducts([...products, resp.data]);
   };
   const updateProduct = async (
     categoryId: string,
@@ -63,14 +63,18 @@ export const ProductProvider = ({children}: any) => {
     productPrice: number,
     productDescription: string,
   ) => {
-    console.log('updateProduct');
-    console.log({
-      categoryId,
-      productName,
-      productId,
-      productPrice,
-      productDescription,
+    const resp = await productosApi.put<Producto>(`/productos/${productId}`, {
+      nombre: productName,
+      precio: productPrice,
+      descripcion: productDescription,
+      categoria: categoryId,
     });
+
+    setProducts(
+      products.map(prod => {
+        return prod._id === productId ? resp.data : prod;
+      }),
+    );
   };
   const deleteProduct = async (id: string) => {};
 

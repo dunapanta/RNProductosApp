@@ -8,14 +8,11 @@ import {
   Animated,
   TouchableOpacity,
 } from 'react-native';
-import {color} from 'react-native-reanimated';
+import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import Colors from '../constants/Colors';
 import {Producto} from '../interfaces/appInterfaces';
-import {StackScreenProps} from '@react-navigation/stack';
-import {ProductStackParams} from '../navigation/ProductsNavigator';
-import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   product: Producto;
