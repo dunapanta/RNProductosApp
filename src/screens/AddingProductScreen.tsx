@@ -159,7 +159,16 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
           {/* Precio */}
           <Text style={styles.label}>Precio del Producto:</Text>
           <View style={{...styles.inputContainer, marginRight: 140}}>
-            <TextInput placeholder="$" style={styles.textInput} />
+            <TextInput
+              placeholder="$"
+              keyboardType="decimal-pad"
+              style={styles.textInput}
+              value={precio.toString()}
+              maxLength={6}
+              onChangeText={value =>
+                onChange(value.replace(/[^0-9]/g, ''), 'precio')
+              }
+            />
           </View>
 
           {/* Descripcion */}
@@ -170,6 +179,8 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
               numberOfLines={4}
               placeholder="Ingrese la descripción del producto"
               style={styles.textInput}
+              value={descripcion}
+              onChangeText={value => onChange(value, 'descripcion')}
             />
           </View>
 
