@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {Producto} from '../interfaces/appInterfaces';
 import {
@@ -13,10 +13,16 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
 import {TouchableOpacity} from 'react-native';
 import {ProductStackParams} from '../navigation/ProductsNavigator';
+import {ProductContext} from '../context/ProductContext';
+import {useEffect} from 'react';
+import {useProductData} from '../hooks/useProductData';
 
 interface Props extends StackScreenProps<ProductStackParams, 'ProductScreen'> {}
 export const ProductScreen = ({navigation, route}: Props) => {
   const product = route.params as Producto;
+  console.log('PROD', product);
+
+  const {producto} = useProductData(product);
 
   return (
     <ScrollView
@@ -30,7 +36,7 @@ export const ProductScreen = ({navigation, route}: Props) => {
       <ImageBackground
         style={styles.headerImage}
         source={
-          product.img ? {uri: product.img} : require('../assets/noImage.png')
+          producto.img ? {uri: producto.img} : require('../assets/noImage.png')
         }>
         <View style={styles.header}>
           <Icon
@@ -48,25 +54,25 @@ export const ProductScreen = ({navigation, route}: Props) => {
             activeOpacity={0.8}
             onPress={() => {
               navigation.navigate('AddingProductScreen', {
-                id: product._id,
-                name: product.nombre,
-                img: product.img,
-                precio: product.precio,
-                description: product.descripcion,
+                id: producto._id,
+                name: producto.nombre,
+                img: producto.img,
+                precio: producto.precio,
+                description: producto.descripcion,
               });
             }}>
             <Icon name="pencil-outline" color="white" size={30} />
           </TouchableOpacity>
         </View>
         <View style={styles.productInfo}>
-          <Text style={styles.productName}>{product.nombre}</Text>
-          <Text style={styles.categoryName}>{product.categoria.nombre}</Text>
+          <Text style={styles.productName}>{producto.nombre}</Text>
+          <Text style={styles.categoryName}>{producto.categoria.nombre}</Text>
 
           {/* User and availability */}
           <View style={styles.userAvailavilityContainer}>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.publish}>Publicado por:</Text>
-              <Text style={styles.user}> {product.usuario.nombre}</Text>
+              <Text style={styles.user}> {producto.usuario.nombre}</Text>
             </View>
             <View style={{flexDirection: 'row'}}>
               <Icon name="checkbox-outline" size={18} color={Colors.primary} />
@@ -75,13 +81,13 @@ export const ProductScreen = ({navigation, route}: Props) => {
           </View>
           {/* Details Producto */}
           <View style={styles.detailsProduct}>
-            <Text style={styles.detailsText}>{product.descripcion}</Text>
+            <Text style={styles.detailsText}>{producto.descripcion}</Text>
           </View>
         </View>
         <View style={styles.priceContainer}>
           <Text style={styles.priceText}>Precio por Producto</Text>
           <View style={styles.priceTag}>
-            <Text style={styles.price}>${product.precio}</Text>
+            <Text style={styles.price}>${producto.precio}</Text>
           </View>
         </View>
         <TouchableOpacity style={styles.btn} activeOpacity={0.8}>
