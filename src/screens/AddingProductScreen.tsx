@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -21,8 +21,7 @@ import Colors from '../constants/Colors';
 import {useCategories} from '../hooks/useCategories';
 import {useForm} from '../hooks/useForm';
 import {ProductContext} from '../context/ProductContext';
-import {useEffect} from 'react';
-import {ModalPopup} from '../components/ModalPopup';
+import {SuccessModalContent} from '../components/SuccessModalContent';
 
 interface Props
   extends StackScreenProps<ProductStackParams, 'AddingProductScreen'> {}
@@ -199,7 +198,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
             />
           </View>
 
-          <ModalPopup visible={visible} />
+          <SuccessModalContent visible={visible} />
 
           <TouchableOpacity
             style={styles.btn}

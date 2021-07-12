@@ -1,63 +1,72 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {Image} from 'react-native';
-import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
-import Colors from '../constants/Colors';
-
-import {ModalContent} from './ModalContent';
+import React, {useState, useRef, useEffect} from 'react';
+import {Modal, StyleSheet, View, Animated} from 'react-native';
 
 interface Props {
   visible: boolean;
+  children: any;
 }
 
-export const ModalPopup = ({visible}: Props) => {
-  const {goBack} = useNavigation();
+export const ModalPopup = ({visible, children}: Props) => {
+  const [showModal, setShowModal] = useState(visible);
+
+  const scaleValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    toggleModal();
+  }, [visible]);
+
+  const toggleModal = () => {
+    if (visible) {
+      setShowModal(true);
+
+      Animated.spring(scaleValue, {
+        toValue: 1,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      setTimeout(() => setShowModal(false), 200);
+
+      Animated.spring(scaleValue, {
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <ModalContent visible={visible}>
-        <View style={styles.modalContent}>
-          <View style={styles.header}>
-            <Text style={{fontSize: 28}}>Producto</Text>
-          </View>
-          <Image
-            source={require('../assets/success.png')}
-            style={{height: 150, width: 150}}
-          />
-          <TouchableOpacity
-            style={styles.btn}
-            activeOpacity={0.8}
-            onPress={goBack}>
-            <Text style={styles.btnText}>Aceptar</Text>
-          </TouchableOpacity>
-        </View>
-      </ModalContent>
-    </View>
+    <Modal transparent visible={showModal}>
+      <View style={styles.modalBackground}>
+        <Animated.View
+          style={[styles.modalContainer, {transform: [{scale: scaleValue}]}]}>
+          {children}
+        </Animated.View>
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  modalBackground: {
     flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  modalContent: {
-    alignItems: 'center',
-  },
-  header: {},
+  modalContainer: {
+    width: '80%',
+    backgroundColor: 'white',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    borderRadius: 20,
 
-  btn: {
-    marginTop: 20,
-    height: 50,
-    width: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Colors.primary,
-    borderRadius: 10,
-  },
-  btnText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+
+    elevation: 15,
   },
 });
