@@ -20,7 +20,6 @@ import {useProductData} from '../hooks/useProductData';
 interface Props extends StackScreenProps<ProductStackParams, 'ProductScreen'> {}
 export const ProductScreen = ({navigation, route}: Props) => {
   const product = route.params as Producto;
-  console.log('PROD', product);
 
   const {producto} = useProductData(product);
 

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ import {useCategories} from '../hooks/useCategories';
 import {useForm} from '../hooks/useForm';
 import {ProductContext} from '../context/ProductContext';
 import {useEffect} from 'react';
+import {ModalPopup} from '../components/ModalPopup';
 
 interface Props
   extends StackScreenProps<ProductStackParams, 'AddingProductScreen'> {}
@@ -29,6 +30,8 @@ interface Props
 export const AddingProductScreen = ({route, navigation}: Props) => {
   const {top} = useSafeAreaInsets();
   const product = route.params;
+
+  const [visible, setVisible] = useState(false);
 
   /* Context para obtener info del producto */
   const {loadProductById, addProduct, updateProduct} =
@@ -82,6 +85,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
       const temCatId = categoriaId || categories[0]._id;
       addProduct(temCatId, nombre, Number(precio), descripcion);
     }
+    setVisible(true);
   };
 
   return (
@@ -194,6 +198,8 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
               onChangeText={value => onChange(value, 'descripcion')}
             />
           </View>
+
+          <ModalPopup visible={visible} />
 
           <TouchableOpacity
             style={styles.btn}
