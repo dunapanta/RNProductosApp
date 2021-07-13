@@ -26,7 +26,10 @@ export const HeaderProducts = () => {
           onPress={() => navigate('AddingProductScreen', {})}>
           <Icon name="add-outline" size={46} color={Colors.primary} />
         </TouchableOpacity>
-        <TouchableOpacity style={{marginTop: 10}} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={{marginTop: 10}}
+          activeOpacity={0.7}
+          onPress={() => navigate('ProtectedScreen')}>
           <Icon name="person-outline" size={40} color={Colors.primary} />
         </TouchableOpacity>
       </View>

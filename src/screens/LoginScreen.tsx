@@ -20,6 +20,8 @@ import {loginStyles} from '../theme/loginTheme';
 import {useForm} from '../hooks/useForm';
 import {AuthContext} from '../context/AuthContext';
 import {AuthButton} from '../components/AuthButton';
+import {ErrorModalContent} from '../components/ErrorModalContent';
+import {ModalContext} from '../context/ModalContext';
 
 interface Props extends StackScreenProps<any, any> {}
 
@@ -32,8 +34,9 @@ export const LoginScreen = ({navigation}: Props) => {
   });
 
   const [loading, setLoading] = useState(false);
+  const {visible, openModal, hideModal} = useContext(ModalContext);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (errorMessage.length === 0) {
       return;
     }
@@ -41,18 +44,26 @@ export const LoginScreen = ({navigation}: Props) => {
       return;
     }
 
-    Alert.alert('Login Incorrecto', errorMessage, [
+    /* Alert.alert('Login Incorrecto', errorMessage, [
       {
         text: 'Aceptar',
         onPress: removeError,
       },
-    ]);
+    ]); 
   }, [errorMessage]);
-
+ */
   const onLogin = () => {
     Keyboard.dismiss();
     signIn({correo: email, password, loading: setLoading});
   };
+
+  const errorTrigger = () => {
+    if (errorMessage.length !== 0 && errorMessage !== 'Token no válido') {
+      return;
+    }
+    openModal();
+  };
+
   return (
     <>
       {/* Background */}
@@ -102,8 +113,23 @@ export const LoginScreen = ({navigation}: Props) => {
             value={password}
             onSubmitEditing={onLogin}
           />
+
+          {errorMessage.length !== 0 && errorMessage !== 'Token no válido' && (
+            <ErrorModalContent
+              visible={visible}
+              titleHead="Login Incorrecto"
+              errorMessage={errorMessage}
+              //hideModal={hideModal}
+              removeError={removeError}
+            />
+          )}
+
           {/* Boton */}
-          <AuthButton onLogin={onLogin} loadingButton={loading} />
+          <AuthButton
+            onLogin={onLogin}
+            loadingButton={loading}
+            errorTrigger={errorTrigger}
+          />
 
           {/* Crear Nueva Cuenta */}
           <View style={loginStyles.newUserContainer}>

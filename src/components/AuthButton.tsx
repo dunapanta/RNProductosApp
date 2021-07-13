@@ -6,16 +6,20 @@ import {loginStyles} from '../theme/loginTheme';
 
 interface Props {
   onLogin: () => void;
+  errorTrigger: () => void;
   loadingButton: boolean;
 }
-export const AuthButton = ({onLogin, loadingButton}: Props) => {
+export const AuthButton = ({onLogin, loadingButton, errorTrigger}: Props) => {
   return (
     <View style={loginStyles.buttonContainer}>
       <TouchableOpacity
         disabled={loadingButton}
         activeOpacity={0.8}
         style={loadingButton ? loginStyles.buttonDisabled : loginStyles.button}
-        onPress={onLogin}>
+        onPress={() => {
+          onLogin();
+          errorTrigger();
+        }}>
         <Text style={loginStyles.buttonText}>
           {loadingButton ? (
             <ActivityIndicator size={30} color={Colors.primary} />

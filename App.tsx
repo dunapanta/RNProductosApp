@@ -5,11 +5,14 @@ import {NavigationContainer} from '@react-navigation/native';
 import Navigator from './src/navigation/Navigator';
 import {AuthProvider} from './src/context/AuthContext';
 import {ProductProvider} from './src/context/ProductContext';
+import {ModalProvider} from './src/context/ModalContext';
 
 const AppState = ({children}: any) => {
   return (
     <AuthProvider>
-      <ProductProvider>{children}</ProductProvider>
+      <ModalProvider>
+        <ProductProvider>{children}</ProductProvider>
+      </ModalProvider>
     </AuthProvider>
   );
 };

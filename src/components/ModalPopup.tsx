@@ -1,12 +1,13 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useContext} from 'react';
 import {Modal, StyleSheet, View, Animated} from 'react-native';
+import {ModalContext} from '../context/ModalContext';
 
 interface Props {
-  visible: boolean;
   children: any;
 }
 
-export const ModalPopup = ({visible, children}: Props) => {
+export const ModalPopup = ({children}: Props) => {
+  const {visible} = useContext(ModalContext);
   const [showModal, setShowModal] = useState(visible);
 
   const scaleValue = useRef(new Animated.Value(0)).current;
@@ -25,7 +26,6 @@ export const ModalPopup = ({visible, children}: Props) => {
       }).start();
     } else {
       setTimeout(() => setShowModal(false), 200);
-
       Animated.spring(scaleValue, {
         toValue: 0,
         useNativeDriver: true,
