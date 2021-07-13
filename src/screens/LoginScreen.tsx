@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   StatusBar,
@@ -34,24 +34,8 @@ export const LoginScreen = ({navigation}: Props) => {
   });
 
   const [loading, setLoading] = useState(false);
-  const {visible, openModal, hideModal} = useContext(ModalContext);
+  const {openModal} = useContext(ModalContext);
 
-  /* useEffect(() => {
-    if (errorMessage.length === 0) {
-      return;
-    }
-    if (errorMessage === 'Token no válido') {
-      return;
-    }
-
-    /* Alert.alert('Login Incorrecto', errorMessage, [
-      {
-        text: 'Aceptar',
-        onPress: removeError,
-      },
-    ]); 
-  }, [errorMessage]);
- */
   const onLogin = () => {
     Keyboard.dismiss();
     signIn({correo: email, password, loading: setLoading});
@@ -99,7 +83,7 @@ export const LoginScreen = ({navigation}: Props) => {
           <Text style={loginStyles.label}>Contraseña:</Text>
           <TextInput
             secureTextEntry
-            placeholder="Ingrese su Contraseña"
+            placeholder="*************"
             style={[
               loginStyles.inputField,
               Platform.OS === 'ios' && loginStyles.inputFieldiOS,
@@ -114,13 +98,13 @@ export const LoginScreen = ({navigation}: Props) => {
             onSubmitEditing={onLogin}
           />
 
+          {/* Modal */}
           {errorMessage.length !== 0 && errorMessage !== 'Token no válido' && (
             <ErrorModalContent
-              visible={visible}
               titleHead="Login Incorrecto"
               errorMessage={errorMessage}
-              //hideModal={hideModal}
               removeError={removeError}
+              statusBarColor="#7A211B"
             />
           )}
 
