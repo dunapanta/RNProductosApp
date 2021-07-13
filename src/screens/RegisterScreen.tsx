@@ -9,7 +9,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 
 import {WhiteLogo} from '../components/WhiteLogo';
@@ -18,8 +17,9 @@ import {registerImage} from '../constants/Images';
 import {useForm} from '../hooks/useForm';
 import {loginStyles} from '../theme/loginTheme';
 import {AuthContext} from '../context/AuthContext';
-import {useEffect} from 'react';
 import {RegisterButton} from '../components/RegisterButton';
+import {ModalContext} from '../context/ModalContext';
+import {ErrorModalContent} from '../components/ErrorModalContent';
 
 interface Props extends StackScreenProps<any, any> {}
 
@@ -30,10 +30,11 @@ export const RegisterScreen = ({navigation}: Props) => {
     email: '',
     password: '',
   });
+  const {openModal} = useContext(ModalContext);
 
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (errorMessage.length === 0) {
       return;
     }
@@ -47,16 +48,22 @@ export const RegisterScreen = ({navigation}: Props) => {
         onPress: removeError,
       },
     ]);
-  }, [errorMessage]);
+  }, [errorMessage]); */
 
   const onRegister = () => {
     Keyboard.dismiss();
     signUp({nombre: name, correo: email, password, loading: setLoading});
   };
+
+  const errorTrigger = () => {
+    if (errorMessage.length !== 0 && errorMessage !== 'Token no válido') {
+      return;
+    }
+    openModal();
+  };
+
   return (
     <>
-      {/* Background */}
-      {/* <Background /> */}
       <StatusBar backgroundColor={Colors.primary} />
 
       <KeyboardAvoidingView
@@ -107,7 +114,7 @@ export const RegisterScreen = ({navigation}: Props) => {
           <Text style={loginStyles.label}>Contraseña:</Text>
           <TextInput
             secureTextEntry
-            placeholder="Ingrese su Contraseña"
+            placeholder="*************"
             style={[
               loginStyles.inputField,
               Platform.OS === 'ios' && loginStyles.inputFieldiOS,
@@ -121,8 +128,23 @@ export const RegisterScreen = ({navigation}: Props) => {
             value={password}
             onSubmitEditing={onRegister}
           />
+
+          {/* Modal */}
+          {errorMessage.length !== 0 && errorMessage !== 'Token no válido' && (
+            <ErrorModalContent
+              titleHead="Registro Incorrecto"
+              errorMessage={errorMessage}
+              removeError={removeError}
+              statusBarColor="#7A211B"
+            />
+          )}
+
           {/* Boton */}
-          <RegisterButton onRegister={onRegister} loadingButton={loading} />
+          <RegisterButton
+            onRegister={onRegister}
+            loadingButton={loading}
+            errorTrigger={errorTrigger}
+          />
 
           {/* Crear Nueva Cuenta */}
           <View style={loginStyles.newUserContainer}>

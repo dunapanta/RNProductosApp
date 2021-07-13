@@ -7,8 +7,13 @@ import {loginStyles} from '../theme/loginTheme';
 interface Props {
   onRegister: () => void;
   loadingButton: boolean;
+  errorTrigger: () => void;
 }
-export const RegisterButton = ({onRegister, loadingButton}: Props) => {
+export const RegisterButton = ({
+  onRegister,
+  loadingButton,
+  errorTrigger,
+}: Props) => {
   return (
     <View style={loginStyles.buttonContainer}>
       <TouchableOpacity
@@ -19,7 +24,10 @@ export const RegisterButton = ({onRegister, loadingButton}: Props) => {
             ? loginStyles.registerButtonDisabled
             : loginStyles.button
         }
-        onPress={onRegister}>
+        onPress={() => {
+          onRegister();
+          errorTrigger();
+        }}>
         <Text style={loginStyles.buttonText}>
           {loadingButton ? (
             <ActivityIndicator size={30} color={Colors.primary} />
