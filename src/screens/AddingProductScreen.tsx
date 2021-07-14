@@ -54,7 +54,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
     categoriaId: '',
     nombre: product.name || '',
     img: product.img || '',
-    precio: product.precio || 0,
+    precio: product.precio || 1,
     descripcion: product.description || '',
   });
 
@@ -86,7 +86,11 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
     const validDescription = descripcion.trim();
 
     if (id.length > 0) {
-      if (validNombre.length > 0 && validDescription.length > 0) {
+      if (
+        validNombre.length > 0 &&
+        validDescription.length > 0 &&
+        categoriaId !== ''
+      ) {
         setvalidForm(true);
         updateProduct(
           categoriaId,
@@ -101,14 +105,17 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
     } else {
       // Si usuario no movio picker seleciona el id de la primera categoria
       const temCatId = categoriaId || categories[0]._id;
-      if (validNombre.length > 0 && validDescription.length > 0) {
+      if (
+        validNombre.length > 0 &&
+        validDescription.length > 0 &&
+        categoriaId !== ''
+      ) {
         setvalidForm(true);
         addProduct(temCatId, validNombre, Number(precio), validDescription);
       }
     }
   };
 
-  console.log('VAMO A VER', validForm, visible);
   return (
     <View style={{...styles.container, top: top}}>
       <Text style={styles.productText}>
@@ -221,18 +228,19 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
           </View>
 
           {/* Modal */}
-          {visible && validForm ? (
-            <SuccessModalContent
-              titleHead={id.length === 0 ? 'Producto Creado' : 'Actualizado'}
-              statusBarColor="rgba(0,0,0,0.5)"
-            />
-          ) : (
-            <ErrorModalContent
-              titleHead="Error de Campos"
-              errorMessage="Ingrese los datos del producto"
-              //statusBarColor="rgba(0,0,0,0.5)"
-            />
-          )}
+          {visible &&
+            (validForm ? (
+              <SuccessModalContent
+                titleHead={id.length === 0 ? 'Producto Creado' : 'Actualizado'}
+                statusBarColor="rgba(0,0,0,0.5)"
+              />
+            ) : (
+              <ErrorModalContent
+                titleHead="Error de Campos"
+                errorMessage="Ingrese los datos del producto"
+                //statusBarColor="rgba(0,0,0,0.5)"
+              />
+            ))}
 
           <TouchableOpacity
             style={styles.btn}

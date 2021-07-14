@@ -16,12 +16,15 @@ import {ProductStackParams} from '../navigation/ProductsNavigator';
 import {ProductContext} from '../context/ProductContext';
 import {useEffect} from 'react';
 import {useProductData} from '../hooks/useProductData';
+import {ModalContext} from '../context/ModalContext';
+import {AuthContext} from '../context/AuthContext';
 
 interface Props extends StackScreenProps<ProductStackParams, 'ProductScreen'> {}
 export const ProductScreen = ({navigation, route}: Props) => {
   const product = route.params as Producto;
-
+  const {hideModal} = useContext(ModalContext);
   const {producto} = useProductData(product);
+  const {user} = useContext(AuthContext);
 
   return (
     <ScrollView
@@ -48,21 +51,25 @@ export const ProductScreen = ({navigation, route}: Props) => {
         </View>
       </ImageBackground>
       <View>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => {
-              navigation.navigate('AddingProductScreen', {
-                id: producto._id,
-                name: producto.nombre,
-                img: producto.img,
-                precio: producto.precio,
-                description: producto.descripcion,
-              });
-            }}>
-            <Icon name="pencil-outline" color="white" size={30} />
-          </TouchableOpacity>
-        </View>
+        {user?.uid === producto.usuario._id && (
+          <View style={styles.iconContainer}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                //Para no cambiar en login ni register cambio modal en falso desde aqui
+                hideModal();
+                navigation.navigate('AddingProductScreen', {
+                  id: producto._id,
+                  name: producto.nombre,
+                  img: producto.img,
+                  precio: producto.precio,
+                  description: producto.descripcion,
+                });
+              }}>
+              <Icon name="pencil-outline" color="white" size={30} />
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.productInfo}>
           <Text style={styles.productName}>{producto.nombre}</Text>
           <Text style={styles.categoryName}>{producto.categoria.nombre}</Text>
