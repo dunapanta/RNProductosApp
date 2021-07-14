@@ -1,5 +1,6 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {View, Image, StyleSheet, Text} from 'react-native';
+import {View, Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Colors from '../constants/Colors';
 
 import {Producto} from '../interfaces/appInterfaces';
@@ -9,30 +10,40 @@ interface Props {
 }
 
 export const LastProductCard = ({product}: Props) => {
+  const {navigate} = useNavigation();
   return (
-    <View style={styles.card}>
-      {product.img ? (
-        <Image source={{uri: product.img}} style={styles.image} />
-      ) : (
-        <Image source={require('../assets/noImage.png')} style={styles.image} />
-      )}
-      <View style={styles.textContainer}>
-        {product.nombre.length < 15 ? (
-          <Text style={styles.text}>{product.nombre}</Text>
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={() => navigate('ProductScreen', product)}>
+      <View style={styles.card}>
+        {product.img ? (
+          <Image source={{uri: product.img}} style={styles.image} />
         ) : (
-          <Text style={styles.text}>{product.nombre.substr(0, 14) + '..'}</Text>
+          <Image
+            source={require('../assets/noImage.png')}
+            style={styles.image}
+          />
         )}
+        <View style={styles.textContainer}>
+          {product.nombre.length < 15 ? (
+            <Text style={styles.text}>{product.nombre}</Text>
+          ) : (
+            <Text style={styles.text}>
+              {product.nombre.substr(0, 14) + '..'}
+            </Text>
+          )}
 
-        {/* Categoria */}
-        {product.categoria.nombre.length < 17 ? (
-          <Text style={styles.smallText}>{product.categoria.nombre}</Text>
-        ) : (
-          <Text style={styles.smallText}>
-            {product.categoria.nombre.substr(0, 17) + '..'}
-          </Text>
-        )}
+          {/* Categoria */}
+          {product.categoria.nombre.length < 17 ? (
+            <Text style={styles.smallText}>{product.categoria.nombre}</Text>
+          ) : (
+            <Text style={styles.smallText}>
+              {product.categoria.nombre.substr(0, 17) + '..'}
+            </Text>
+          )}
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

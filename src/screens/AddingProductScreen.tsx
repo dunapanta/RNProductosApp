@@ -118,9 +118,18 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
 
   return (
     <View style={{...styles.container, top: top}}>
-      <Text style={styles.productText}>
-        {product.name ? product.name : 'Nuevo Producto'}
-      </Text>
+      <View style={{flexDirection: 'row'}}>
+        <TouchableOpacity
+          style={{marginRight: 10}}
+          activeOpacity={0.7}
+          onPress={navigation.goBack}>
+          <Icon name="chevron-back-outline" size={42} color={Colors.primary} />
+        </TouchableOpacity>
+
+        <Text style={styles.productText}>
+          {product.name ? product.name : 'Nuevo Producto'}
+        </Text>
+      </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -238,7 +247,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
               <ErrorModalContent
                 titleHead="Error de Campos"
                 errorMessage="Ingrese los datos del producto"
-                //statusBarColor="rgba(0,0,0,0.5)"
+                statusBarColor="rgba(0,0,0,0.5)"
               />
             ))}
 
