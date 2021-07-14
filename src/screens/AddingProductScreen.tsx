@@ -22,6 +22,7 @@ import {useCategories} from '../hooks/useCategories';
 import {useForm} from '../hooks/useForm';
 import {ProductContext} from '../context/ProductContext';
 import {SuccessModalContent} from '../components/SuccessModalContent';
+import {ModalContext} from '../context/ModalContext';
 
 interface Props
   extends StackScreenProps<ProductStackParams, 'AddingProductScreen'> {}
@@ -30,13 +31,12 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
   const {top} = useSafeAreaInsets();
   const product = route.params;
 
-  const [visible, setVisible] = useState(false);
-
   /* Context para obtener info del producto */
   const {loadProductById, addProduct, updateProduct} =
     useContext(ProductContext);
 
   const {isLoading, categories} = useCategories();
+  const {visible, openModal} = useContext(ModalContext);
 
   const {
     id,
@@ -84,7 +84,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
       const temCatId = categoriaId || categories[0]._id;
       addProduct(temCatId, nombre, Number(precio), descripcion);
     }
-    setVisible(true);
+    openModal();
   };
 
   return (
@@ -198,7 +198,15 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
             />
           </View>
 
-          <SuccessModalContent visible={visible} />
+          {/* Modal */}
+          {visible && (
+            <SuccessModalContent
+              titleHead={
+                id.length === 0 ? 'Producto Creado' : 'Actualizado'
+              }
+              statusBarColor="rgba(0,0,0,0.5)"
+            />
+          )}
 
           <TouchableOpacity
             style={styles.btn}

@@ -48,14 +48,19 @@ export const ProductProvider = ({children}: any) => {
     productPrice: number,
     productDescription: string,
   ) => {
-    const resp = await productosApi.post<Producto>('/productos', {
-      nombre: productName,
-      precio: productPrice,
-      descripcion: productDescription,
-      categoria: categoryId,
-    });
-    setProducts([...products, resp.data]);
+    try {
+      const resp = await productosApi.post<Producto>('/productos', {
+        nombre: productName,
+        precio: productPrice,
+        descripcion: productDescription,
+        categoria: categoryId,
+      });
+      setProducts([...products, resp.data]);
+    } catch (err) {
+      console.log(err.response.data.errors[0].msg);
+    }
   };
+
   const updateProduct = async (
     categoryId: string,
     productName: string,
@@ -63,18 +68,21 @@ export const ProductProvider = ({children}: any) => {
     productPrice: number,
     productDescription: string,
   ) => {
-    const resp = await productosApi.put<Producto>(`/productos/${productId}`, {
-      nombre: productName,
-      precio: productPrice,
-      descripcion: productDescription,
-      categoria: categoryId,
-    });
-
-    setProducts(
-      products.map(prod => {
-        return prod._id === productId ? resp.data : prod;
-      }),
-    );
+    try {
+      const resp = await productosApi.put<Producto>(`/productos/${productId}`, {
+        nombre: productName,
+        precio: productPrice,
+        descripcion: productDescription,
+        categoria: categoryId,
+      });
+      setProducts(
+        products.map(prod => {
+          return prod._id === productId ? resp.data : prod;
+        }),
+      );
+    } catch (err) {
+      console.log(err.response.data.errors[0].msg);
+    }
   };
   const deleteProduct = async (id: string) => {};
 

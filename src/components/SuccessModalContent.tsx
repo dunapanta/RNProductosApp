@@ -1,23 +1,35 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {Image} from 'react-native';
-import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
+import React, {useContext} from 'react';
+import {
+  Text,
+  StyleSheet,
+  View,
+  StatusBar,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+
 import Colors from '../constants/Colors';
+import {ModalContext} from '../context/ModalContext';
 
 import {ModalPopup} from './ModalPopup';
 
 interface Props {
-  visible: boolean;
+  titleHead?: string;
+  statusBarColor: string;
 }
 
-export const SuccessModalContent = ({visible}: Props) => {
+export const SuccessModalContent = ({titleHead, statusBarColor}: Props) => {
   const {goBack} = useNavigation();
+  const {hideModal} = useContext(ModalContext);
+
   return (
     <View style={styles.container}>
-      <ModalPopup visible={visible}>
+      <StatusBar backgroundColor={statusBarColor} />
+      <ModalPopup>
         <View style={styles.modalContent}>
           <View style={styles.header}>
-            <Text style={{fontSize: 28}}>Producto</Text>
+            <Text style={{fontSize: 28}}>{titleHead}</Text>
           </View>
           <Image
             source={require('../assets/success.png')}
@@ -26,7 +38,10 @@ export const SuccessModalContent = ({visible}: Props) => {
           <TouchableOpacity
             style={styles.btn}
             activeOpacity={0.8}
-            onPress={goBack}>
+            onPress={() => {
+              hideModal();
+              goBack();
+            }}>
             <Text style={styles.btnText}>Aceptar</Text>
           </TouchableOpacity>
         </View>
