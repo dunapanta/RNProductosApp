@@ -85,11 +85,19 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
     const validNombre = nombre.trim();
     const validDescription = descripcion.trim();
 
+    if (categories[0]._id === undefined) {
+      return;
+    }
+
+    // Si usuario no movio picker seleciona el id de la primera categoria
+    const temCatId = categoriaId || categories[0]._id;
+
     if (id.length > 0) {
       if (
         validNombre.length > 0 &&
         validDescription.length > 0 &&
-        categoriaId !== ''
+        categoriaId !== '' &&
+        categoriaId !== undefined
       ) {
         setvalidForm(true);
         updateProduct(
@@ -103,12 +111,11 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
 
       return;
     } else {
-      // Si usuario no movio picker seleciona el id de la primera categoria
-      const temCatId = categoriaId || categories[0]._id;
       if (
         validNombre.length > 0 &&
         validDescription.length > 0 &&
-        categoriaId !== ''
+        temCatId !== '' &&
+        temCatId !== undefined
       ) {
         setvalidForm(true);
         addProduct(temCatId, validNombre, Number(precio), validDescription);
