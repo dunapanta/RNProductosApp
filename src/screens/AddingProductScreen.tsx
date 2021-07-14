@@ -23,6 +23,7 @@ import {useForm} from '../hooks/useForm';
 import {ProductContext} from '../context/ProductContext';
 import {SuccessModalContent} from '../components/SuccessModalContent';
 import {ModalContext} from '../context/ModalContext';
+import {ErrorModalContent} from '../components/ErrorModalContent';
 
 interface Props
   extends StackScreenProps<ProductStackParams, 'AddingProductScreen'> {}
@@ -57,6 +58,8 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
     descripcion: product.description || '',
   });
 
+  const [validForm, setvalidForm] = useState(false);
+
   useEffect(() => {
     loadProduct();
   }, []);
@@ -77,16 +80,35 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
   };
 
   const saveOrUpdate = () => {
+    openModal();
+
+    const validNombre = nombre.trim();
+    const validDescription = descripcion.trim();
+
     if (id.length > 0) {
-      updateProduct(categoriaId, nombre, id, Number(precio), descripcion);
+      if (validNombre.length > 0 && validDescription.length > 0) {
+        setvalidForm(true);
+        updateProduct(
+          categoriaId,
+          validNombre,
+          id,
+          Number(precio),
+          validDescription,
+        );
+      }
+
+      return;
     } else {
       // Si usuario no movio picker seleciona el id de la primera categoria
       const temCatId = categoriaId || categories[0]._id;
-      addProduct(temCatId, nombre, Number(precio), descripcion);
+      if (validNombre.length > 0 && validDescription.length > 0) {
+        setvalidForm(true);
+        addProduct(temCatId, validNombre, Number(precio), validDescription);
+      }
     }
-    openModal();
   };
 
+  console.log('VAMO A VER', validForm, visible);
   return (
     <View style={{...styles.container, top: top}}>
       <Text style={styles.productText}>
@@ -199,12 +221,16 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
           </View>
 
           {/* Modal */}
-          {visible && (
+          {visible && validForm ? (
             <SuccessModalContent
-              titleHead={
-                id.length === 0 ? 'Producto Creado' : 'Actualizado'
-              }
+              titleHead={id.length === 0 ? 'Producto Creado' : 'Actualizado'}
               statusBarColor="rgba(0,0,0,0.5)"
+            />
+          ) : (
+            <ErrorModalContent
+              titleHead="Error de Campos"
+              errorMessage="Ingrese los datos del producto"
+              //statusBarColor="rgba(0,0,0,0.5)"
             />
           )}
 
@@ -216,10 +242,6 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
               {product.id ? 'Actualizar Producto' : 'Crear Producto'}
             </Text>
           </TouchableOpacity>
-
-          <Text style={{fontSize: 15, marginBottom: 150}}>
-            {JSON.stringify(form, null, 5)}
-          </Text>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -281,7 +303,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     marginHorizontal: 20,
     borderRadius: 10,
-    marginBottom: 100,
+    marginBottom: 120,
   },
 
   uploadButtons: {

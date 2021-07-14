@@ -16,7 +16,7 @@ interface Props {
   visible?: boolean;
   titleHead?: string;
   errorMessage?: string;
-  statusBarColor: string;
+  statusBarColor?: string;
   hideModal?: () => void;
   removeError?: () => void;
 }

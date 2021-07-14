@@ -42,6 +42,7 @@ export const ProductProvider = ({children}: any) => {
     );
     setProducts([...products, ...resp.data.productos]);
   };
+
   const addProduct = async (
     categoryId: string,
     productName: string,
@@ -57,7 +58,7 @@ export const ProductProvider = ({children}: any) => {
       });
       setProducts([...products, resp.data]);
     } catch (err) {
-      console.log(err.response.data.errors[0].msg);
+      console.log('ERROR NOOOO', err.response.data.errors[0].msg);
     }
   };
 
