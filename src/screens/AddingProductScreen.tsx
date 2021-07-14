@@ -85,10 +85,9 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
     const validNombre = nombre.trim();
     const validDescription = descripcion.trim();
 
-    if (categories[0]._id === undefined) {
+    if (categories.length === 0) {
       return;
     }
-
     // Si usuario no movio picker seleciona el id de la primera categoria
     const temCatId = categoriaId || categories[0]._id;
 
