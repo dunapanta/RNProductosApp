@@ -11,11 +11,13 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ProductStackParams} from '../navigation/ProductsNavigator';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+import {Picker} from '@react-native-picker/picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 import Colors from '../constants/Colors';
 import {useCategories} from '../hooks/useCategories';
@@ -77,6 +79,18 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
       img,
       precio,
     });
+  };
+
+  const takePhoto = () => {
+    launchCamera(
+      {
+        mediaType: 'photo',
+        quality: 0.5,
+      },
+      resp => {
+        console.log(resp);
+      },
+    );
   };
 
   const saveOrUpdate = () => {
@@ -204,7 +218,10 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
               />
               <Text style={styles.btnText}>Galería</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.uploadButtons} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={styles.uploadButtons}
+              activeOpacity={0.8}
+              onPress={takePhoto}>
               <Icon
                 size={22}
                 style={{marginRight: 10}}
