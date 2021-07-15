@@ -34,6 +34,10 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
   const {top} = useSafeAreaInsets();
   const product = route.params;
 
+  const [validForm, setvalidForm] = useState(false);
+  const [tempUriImage, settempUriImage] = useState<string>('');
+  const [buttonLoading, setButtonLoading] = useState(false);
+
   /* Context para obtener info del producto */
   const {loadProductById, addProduct, updateProduct} =
     useContext(ProductContext);
@@ -59,8 +63,6 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
     precio: product.precio || 1,
     descripcion: product.description || '',
   });
-
-  const [validForm, setvalidForm] = useState(false);
 
   useEffect(() => {
     loadProduct();
@@ -89,11 +91,19 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
       },
       resp => {
         console.log(resp);
+        if (resp.didCancel) {
+          return;
+        }
+        if (!resp.assets[0].uri) {
+          return;
+        }
+        settempUriImage(resp.assets[0].uri);
       },
     );
   };
 
   const saveOrUpdate = () => {
+    setButtonLoading(true);
     openModal();
 
     const validNombre = nombre.trim();
@@ -134,6 +144,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
         addProduct(temCatId, validNombre, Number(precio), validDescription);
       }
     }
+    //setButtonLoading(false);
   };
 
   return (
@@ -201,10 +212,17 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
 
           {/*  Preview Image */}
           <View style={styles.previewImage}>
-            <Image
-              style={{height: '100%', width: '100%'}}
-              source={img ? {uri: img} : require('../assets/noImage.png')}
-            />
+            {tempUriImage ? (
+              <Image
+                style={{height: '100%', width: '100%'}}
+                source={{uri: tempUriImage}}
+              />
+            ) : (
+              <Image
+                style={{height: '100%', width: '100%'}}
+                source={img ? {uri: img} : require('../assets/noImage.png')}
+              />
+            )}
           </View>
 
           {/* Image upload Buttons */}
@@ -261,6 +279,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
 
           {/* Modal */}
           {visible &&
+            !buttonLoading &&
             (validForm ? (
               <SuccessModalContent
                 titleHead={id.length === 0 ? 'Producto Creado' : 'Actualizado'}
@@ -275,12 +294,17 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
             ))}
 
           <TouchableOpacity
-            style={styles.btn}
+            style={buttonLoading ? styles.btnDisabled : styles.btn}
+            disabled={buttonLoading}
             activeOpacity={0.8}
             onPress={saveOrUpdate}>
-            <Text style={styles.btnText}>
-              {product.id ? 'Actualizar Producto' : 'Crear Producto'}
-            </Text>
+            {buttonLoading ? (
+              <ActivityIndicator size={30} color={Colors.secondary} />
+            ) : (
+              <Text style={styles.btnText}>
+                {product.id ? 'Actualizar Producto' : 'Crear Producto'}
+              </Text>
+            )}
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -361,5 +385,16 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+
+  btnDisabled: {
+    marginTop: 40,
+    height: 55,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.primaryLigth,
+    marginHorizontal: 20,
+    borderRadius: 10,
+    marginBottom: 120,
   },
 });
