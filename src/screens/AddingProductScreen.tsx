@@ -27,6 +27,8 @@ import {SuccessModalContent} from '../components/SuccessModalContent';
 import {ModalContext} from '../context/ModalContext';
 import {ErrorModalContent} from '../components/ErrorModalContent';
 
+import {ImagePickerResponse} from 'react-native-image-picker';
+
 interface Props
   extends StackScreenProps<ProductStackParams, 'AddingProductScreen'> {}
 
@@ -36,10 +38,12 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
 
   const [validForm, setvalidForm] = useState(false);
   const [tempUriImage, settempUriImage] = useState<string>('');
+  const [tempImageRespnse, setTempImageRespnse] =
+    useState<ImagePickerResponse>();
   const [buttonLoading, setButtonLoading] = useState(false);
 
   /* Context para obtener info del producto */
-  const {loadProductById, addProduct, updateProduct} =
+  const {loadProductById, addProduct, updateProduct, uploadImage} =
     useContext(ProductContext);
 
   const {isLoading, categories} = useCategories();
@@ -98,11 +102,32 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
           return;
         }
         settempUriImage(resp.assets[0].uri);
+        setTempImageRespnse(resp);
       },
     );
   };
 
-  const saveOrUpdate = () => {
+  const takePhotoFromLibrary = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        quality: 0.5,
+      },
+      resp => {
+        console.log(resp);
+        if (resp.didCancel) {
+          return;
+        }
+        if (!resp.assets[0].uri) {
+          return;
+        }
+        settempUriImage(resp.assets[0].uri);
+        setTempImageRespnse(resp);
+      },
+    );
+  };
+
+  const saveOrUpdate = async () => {
     setButtonLoading(true);
     openModal();
 
@@ -110,6 +135,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
     const validDescription = descripcion.trim();
 
     if (categories.length === 0) {
+      setButtonLoading(false);
       return;
     }
     // Si usuario no movio picker seleciona el id de la primera categoria
@@ -122,8 +148,12 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
         categoriaId !== '' &&
         categoriaId !== undefined
       ) {
+        /* Subir Fotografía */
+        if (tempUriImage) {
+          await uploadImage(tempImageRespnse, id);
+        }
         setvalidForm(true);
-        updateProduct(
+        await updateProduct(
           categoriaId,
           validNombre,
           id,
@@ -131,8 +161,6 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
           validDescription,
         );
       }
-
-      return;
     } else {
       if (
         validNombre.length > 0 &&
@@ -141,10 +169,19 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
         temCatId !== undefined
       ) {
         setvalidForm(true);
-        addProduct(temCatId, validNombre, Number(precio), validDescription);
+        const newProduct = await addProduct(
+          temCatId,
+          validNombre,
+          Number(precio),
+          validDescription,
+        );
+        /* Subir Fotografía */
+        if (tempUriImage) {
+          await uploadImage(tempImageRespnse, newProduct?._id!);
+        }
       }
     }
-    //setButtonLoading(false);
+    setButtonLoading(false);
   };
 
   return (
@@ -227,7 +264,10 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
 
           {/* Image upload Buttons */}
           <View style={styles.imgButtons}>
-            <TouchableOpacity style={styles.uploadButtons} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={styles.uploadButtons}
+              activeOpacity={0.8}
+              onPress={takePhotoFromLibrary}>
               <Icon
                 size={22}
                 style={{marginRight: 10}}
