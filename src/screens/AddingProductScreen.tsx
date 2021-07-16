@@ -397,6 +397,8 @@ const styles = StyleSheet.create({
   },
   imgButtons: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   btn: {
