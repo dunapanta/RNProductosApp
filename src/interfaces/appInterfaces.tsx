@@ -47,7 +47,7 @@ export interface Producto {
   img?: string;
   categoria: Categoria;
   usuario: Categoria;
-  disponible: boolean;
+  disponible?: boolean;
 }
 
 /* export interface Categoria {

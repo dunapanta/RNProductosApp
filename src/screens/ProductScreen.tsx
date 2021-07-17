@@ -8,13 +8,13 @@ import {
   StyleSheet,
   ImageBackground,
   StatusBar,
+  TouchableOpacity
 } from 'react-native';
+
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import Colors from '../constants/Colors';
-import {TouchableOpacity} from 'react-native';
 import {ProductStackParams} from '../navigation/ProductsNavigator';
-import {ProductContext} from '../context/ProductContext';
-import {useEffect} from 'react';
 import {useProductData} from '../hooks/useProductData';
 import {ModalContext} from '../context/ModalContext';
 import {AuthContext} from '../context/AuthContext';

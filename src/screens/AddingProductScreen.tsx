@@ -41,6 +41,8 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
   const [tempImageRespnse, setTempImageRespnse] =
     useState<ImagePickerResponse>();
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [libraryButtonLoading, setlibraryButtonLoading] = useState(false);
+  const [cameraButtonLoading, setcameraButtonLoading] = useState(false);
 
   /* Context para obtener info del producto */
   const {loadProductById, addProduct, updateProduct, uploadImage} =
@@ -88,6 +90,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
   };
 
   const takePhoto = () => {
+    setcameraButtonLoading(true);
     launchCamera(
       {
         mediaType: 'photo',
@@ -96,18 +99,22 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
       resp => {
         console.log(resp);
         if (resp.didCancel) {
+          setcameraButtonLoading(false);
           return;
         }
         if (!resp.assets[0].uri) {
+          setcameraButtonLoading(false);
           return;
         }
         settempUriImage(resp.assets[0].uri);
         setTempImageRespnse(resp);
+        setcameraButtonLoading(false);
       },
     );
   };
 
   const takePhotoFromLibrary = () => {
+    setlibraryButtonLoading(true);
     launchImageLibrary(
       {
         mediaType: 'photo',
@@ -116,13 +123,16 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
       resp => {
         console.log(resp);
         if (resp.didCancel) {
+          setlibraryButtonLoading(false);
           return;
         }
         if (!resp.assets[0].uri) {
+          setlibraryButtonLoading(false);
           return;
         }
         settempUriImage(resp.assets[0].uri);
         setTempImageRespnse(resp);
+        setlibraryButtonLoading(false);
       },
     );
   };
@@ -148,11 +158,12 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
         categoriaId !== '' &&
         categoriaId !== undefined
       ) {
+        setvalidForm(true);
         /* Subir Fotografía */
         if (tempUriImage) {
           await uploadImage(tempImageRespnse, id);
         }
-        setvalidForm(true);
+
         await updateProduct(
           categoriaId,
           validNombre,
@@ -265,27 +276,45 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
           {/* Image upload Buttons */}
           <View style={styles.imgButtons}>
             <TouchableOpacity
-              style={styles.uploadButtons}
+              style={
+                libraryButtonLoading
+                  ? styles.uploadButtonsLoading
+                  : styles.uploadButtons
+              }
               activeOpacity={0.8}
+              disabled={libraryButtonLoading}
               onPress={takePhotoFromLibrary}>
-              <Icon
-                size={22}
-                style={{marginRight: 10}}
-                color="white"
-                name="image-outline"
-              />
+              {libraryButtonLoading ? (
+                <ActivityIndicator size={28} color={Colors.secondary} />
+              ) : (
+                <Icon
+                  size={22}
+                  style={{marginRight: 10}}
+                  color="white"
+                  name="image-outline"
+                />
+              )}
               <Text style={styles.btnText}>Galería</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.uploadButtons}
+              style={
+                cameraButtonLoading
+                  ? styles.uploadButtonsLoading
+                  : styles.uploadButtons
+              }
               activeOpacity={0.8}
+              disabled={cameraButtonLoading}
               onPress={takePhoto}>
-              <Icon
-                size={22}
-                style={{marginRight: 10}}
-                color="white"
-                name="camera-outline"
-              />
+              {cameraButtonLoading ? (
+                <ActivityIndicator size={28} color={Colors.secondary} />
+              ) : (
+                <Icon
+                  size={22}
+                  style={{marginRight: 10}}
+                  color="white"
+                  name="camera-outline"
+                />
+              )}
               <Text style={styles.btnText}>Cámara</Text>
             </TouchableOpacity>
           </View>
@@ -423,6 +452,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 10,
   },
+  uploadButtonsLoading: {
+    flexDirection: 'row',
+    marginTop: 20,
+    height: 45,
+    minWidth: 110,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.primaryLigth,
+    marginHorizontal: 20,
+    borderRadius: 10,
+  },
+
   btnText: {
     color: 'white',
     fontSize: 18,

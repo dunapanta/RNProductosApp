@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  createContext,
-  SetStateAction,
-  Dispatch,
-} from 'react';
+import React, {useState, useEffect, createContext} from 'react';
 
 import {ImagePickerResponse} from 'react-native-image-picker';
 
@@ -20,7 +14,7 @@ type ProductsContextProps = {
     productPrice: number,
     productDescription: string,
     //ProductImg: string,
-  ) => Promise<Producto | undefined>
+  ) => Promise<Producto | undefined>;
   updateProduct: (
     categoryId: string,
     productName: string,
@@ -113,7 +107,7 @@ export const ProductProvider = ({children}: any) => {
 
     try {
       const resp = productosApi.put(`/uploads/productos/${id}`, fromData);
-      console.log(resp);
+      return (await resp).data;
     } catch (err) {
       console.log(err);
     }
