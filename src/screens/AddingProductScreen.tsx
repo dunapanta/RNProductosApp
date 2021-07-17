@@ -45,8 +45,13 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
   const [cameraButtonLoading, setcameraButtonLoading] = useState(false);
 
   /* Context para obtener info del producto */
-  const {loadProductById, addProduct, updateProduct, uploadImage} =
-    useContext(ProductContext);
+  const {
+    loadProductById,
+    addProduct,
+    updateProduct,
+    uploadImage,
+    loadProducts,
+  } = useContext(ProductContext);
 
   const {isLoading, categories} = useCategories();
   const {visible, openModal} = useContext(ModalContext);
@@ -192,6 +197,7 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
         }
       }
     }
+    loadProducts();
     setButtonLoading(false);
   };
 

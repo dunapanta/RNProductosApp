@@ -41,7 +41,8 @@ export const ProductProvider = ({children}: any) => {
     const resp = await productosApi.get<ProductsResponse>(
       '/productos?limite=50',
     );
-    setProducts([...products, ...resp.data.productos]);
+    //setProducts([...products, ...resp.data.productos]);
+    setProducts([...resp.data.productos]);
   };
 
   const addProduct = async (
