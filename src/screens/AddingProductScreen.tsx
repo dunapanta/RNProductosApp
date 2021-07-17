@@ -211,8 +211,12 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
           <Icon name="chevron-back-outline" size={42} color={Colors.primary} />
         </TouchableOpacity>
 
-        <Text style={styles.productText}>
-          {product.name ? product.name : 'Nuevo Producto'}
+        <Text numberOfLines={1} style={styles.productText}>
+          {product.name
+            ? product.name.length > 13
+              ? product.name.slice(0, 13) + '...'
+              : product.name
+            : 'Nuevo Producto'}
         </Text>
       </View>
       <KeyboardAvoidingView
