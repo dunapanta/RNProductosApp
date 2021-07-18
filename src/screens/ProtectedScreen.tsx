@@ -13,17 +13,46 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 import Colors from '../constants/Colors';
 import {AuthContext} from '../context/AuthContext';
+import {useUpdateUserPhoto} from '../hooks/useUpdateUserPhoto';
 
 export const ProtectedScreen = () => {
   const [temUserPhoto, setTemUserPhoto] = useState<string>('');
   const [photoButtonLoading, setphotoButtonLoading] = useState(false);
 
-  const {user, logout} = useContext(AuthContext);
+  const {user, updateUser, logout} = useContext(AuthContext);
+  const {updatePhoto} = useUpdateUserPhoto()
   const {top} = useSafeAreaInsets();
   const {goBack} = useNavigation();
+
+  const takePhotoFromLibrary = () => {
+    setphotoButtonLoading(true);
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        quality: 0.5,
+      },
+      resp => {
+        console.log(resp);
+        if (resp.didCancel) {
+          setphotoButtonLoading(false);
+          return;
+        }
+        if (!resp.assets[0].uri) {
+          setphotoButtonLoading(false);
+          return;
+        }
+        setTemUserPhoto(resp.assets[0].uri);
+        if (user?.uid) {
+          updatePhoto(resp, user.uid)
+        }
+        setphotoButtonLoading(false);
+      },
+    );
+  };
 
   return (
     <View style={{top: top + 10, marginHorizontal: 30}}>
@@ -54,20 +83,41 @@ export const ProtectedScreen = () => {
             />
           )}
         </View>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity activeOpacity={0.7} onPress={() => {}}>
-            <Icon name="add-outline" color="white" size={30} />
+        <View
+          style={{
+            ...styles.iconContainer,
+            backgroundColor: photoButtonLoading
+              ? Colors.primaryLigth
+              : Colors.primary,
+          }}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            disabled={photoButtonLoading}
+            onPress={takePhotoFromLibrary}>
+            {photoButtonLoading ? (
+              <ActivityIndicator size={28} color="white" />
+            ) : (
+              <Icon name="add-outline" color="white" size={30} />
+            )}
           </TouchableOpacity>
         </View>
 
         <View style={styles.infoCard}>
-          <Icon name="person-outline" color="black" size={30} />
-          <Text style={{fontSize: 18}}>{user?.nombre}</Text>
+          <View style={{flex: 1}}>
+            <Icon name="person-outline" color={Colors.secondary} size={30} />
+          </View>
+          <View style={{flex: 2}}>
+            <Text style={{fontSize: 18, marginTop: 10}}>{user?.nombre}</Text>
+          </View>
         </View>
 
         <View style={styles.infoCard}>
-          <Icon name="mail-outline" color="black" size={30} />
-          <Text style={{fontSize: 18}}>{user?.correo}</Text>
+          <View style={{flex: 1}}>
+            <Icon name="mail-outline" color={Colors.secondary} size={30} />
+          </View>
+          <View style={{flex: 2}}>
+            <Text style={{fontSize: 18, marginTop: 3}}>{user?.correo}</Text>
+          </View>
         </View>
 
         <TouchableOpacity
@@ -86,7 +136,7 @@ export const ProtectedScreen = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    paddingBottom: 20,
+    marginBottom: 60,
     marginHorizontal: 26,
     alignItems: 'center',
   },
@@ -111,7 +161,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 60,
     width: 60,
-    backgroundColor: Colors.primary,
     top: 160,
     right: 30,
     borderRadius: 30,
@@ -120,7 +169,7 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: 60,
     height: 55,
     minWidth: 170,
     justifyContent: 'center',
@@ -136,10 +185,9 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   infoCard: {
+    marginTop: 50,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     alignItems: 'center',
-    width: 300,
-    height: 100
   },
 });

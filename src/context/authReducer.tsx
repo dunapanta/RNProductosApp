@@ -13,6 +13,7 @@ type AuthAction =
   | {type: 'signUp'; payload: {token: string; user: Usuario}}
   | {type: 'addError'; payload: string}
   | {type: 'removeError'}
+  | {type: 'updateUser'; payload: Usuario}
   | {
       type: 'notAuthenticathed';
     } /* si el token no es valido limpia todo a valores por defecto*/
@@ -45,6 +46,11 @@ export const authReducer = (
         status: 'authenticated',
         token: action.payload.token,
         user: action.payload.user,
+      };
+    case 'updateUser':
+      return {
+        ...state,
+        user: action.payload,
       };
     case 'logout':
     case 'notAuthenticathed':

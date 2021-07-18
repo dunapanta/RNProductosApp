@@ -17,6 +17,7 @@ type AuthContextProps = {
   status: 'checking' | 'authenticated' | 'not-authenticated';
   signUp: ({nombre, correo, password, loading}: RegisterData) => void;
   signIn: (loginData: LoginData) => void;
+  updateUser: (user: Usuario) => void;
   removeError: () => void;
   logout: () => void;
 };
@@ -122,6 +123,14 @@ export const AuthProvider = ({children}: any) => {
     }
     loading(false);
   };
+
+  const updateUser = (user: Usuario) => {
+    dispatch({
+      type: 'updateUser',
+      payload: user,
+    });
+  };
+
   const removeError = () => {
     dispatch({
       type: 'removeError',
@@ -137,6 +146,7 @@ export const AuthProvider = ({children}: any) => {
     <AuthContext.Provider
       value={{
         ...state,
+        updateUser,
         signUp,
         signIn,
         removeError,

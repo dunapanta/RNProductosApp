@@ -96,7 +96,7 @@ export const ProductProvider = ({children}: any) => {
   };
 
   const uploadImage = async (data: ImagePickerResponse, id: string) => {
-    console.log('uploadImage', id);
+    //console.log('uploadImage', id);
     const photoToUpload = {
       uri: data.assets[0].uri,
       type: data.assets[0].type,
