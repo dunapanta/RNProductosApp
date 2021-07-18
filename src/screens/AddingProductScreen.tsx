@@ -202,13 +202,13 @@ export const AddingProductScreen = ({route, navigation}: Props) => {
   };
 
   return (
-    <View style={{...styles.container, top: top}}>
+    <View style={{...styles.container, top: top + 10}}>
       <View style={{flexDirection: 'row'}}>
         <TouchableOpacity
           style={{marginRight: 10}}
           activeOpacity={0.7}
           onPress={navigation.goBack}>
-          <Icon name="chevron-back-outline" size={42} color={Colors.primary} />
+          <Icon name="chevron-back-outline" size={40} color={Colors.primary} />
         </TouchableOpacity>
 
         <Text numberOfLines={1} style={styles.productText}>
