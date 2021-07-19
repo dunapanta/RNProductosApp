@@ -22,11 +22,18 @@ export const OnBoardScreen = () => {
 
   const goNextSlide = () => {
     const nextSlideIndex = currentSliceIndex + 1;
-    const offset = nextSlideIndex * width;
-    if (ref.current.scrollToOffset) {
-      ref.current.scrollToOffset({offset});
+    if (nextSlideIndex !== slides.length) {
+      const offset = nextSlideIndex * width;
+      ref?.current?.scrollToOffset({offset});
+      setCurrentSliceIndex(nextSlideIndex);
     }
-    setCurrentSliceIndex(nextSlideIndex);
+  };
+
+  const skipSlides = () => {
+    const lastSlideIndex = slides.length - 1;
+    const offset = lastSlideIndex * width;
+    ref?.current?.scrollToOffset({offset});
+    setCurrentSliceIndex(lastSlideIndex);
   };
 
   return (
@@ -45,6 +52,7 @@ export const OnBoardScreen = () => {
             item={item}
             currentSliceIndex={currentSliceIndex}
             nextSlide={goNextSlide}
+            skip={skipSlides}
           />
         )}
       />

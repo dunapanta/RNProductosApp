@@ -14,10 +14,11 @@ type Props = {
   item: {id: string; image: any; title: string; subtitle: string};
   currentSliceIndex: number;
   nextSlide: () => void;
+  skip: () => void;
 };
 const {width} = Dimensions.get('window');
 
-export const Slide = ({item, currentSliceIndex, nextSlide}: Props) => {
+export const Slide = ({item, currentSliceIndex, nextSlide, skip}: Props) => {
   return (
     <View
       style={{
@@ -67,6 +68,7 @@ export const Slide = ({item, currentSliceIndex, nextSlide}: Props) => {
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
             activeOpacity={0.7}
+            onPress={skip}
             style={[
               styles.btn,
               {
