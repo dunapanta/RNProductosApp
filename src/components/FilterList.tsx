@@ -43,7 +43,7 @@ export const FilterList = () => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
-    marginTop: 20,
+    marginTop: 10,
   },
   categoryListText: {
     fontSize: 18,
