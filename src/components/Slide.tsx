@@ -1,3 +1,5 @@
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {
   View,
@@ -10,15 +12,22 @@ import {
 import Colors from '../constants/Colors';
 import slides from '../constants/OnboardSlides';
 
-type Props = {
+interface Props {
   item: {id: string; image: any; title: string; subtitle: string};
   currentSliceIndex: number;
   nextSlide: () => void;
   skip: () => void;
-};
+  navigation: StackNavigationProp<any, any>
+}
 const {width} = Dimensions.get('window');
 
-export const Slide = ({item, currentSliceIndex, nextSlide, skip}: Props) => {
+export const Slide = ({
+  navigation,
+  item,
+  currentSliceIndex,
+  nextSlide,
+  skip,
+}: Props) => {
   return (
     <View
       style={{
@@ -65,32 +74,43 @@ export const Slide = ({item, currentSliceIndex, nextSlide, skip}: Props) => {
       </View>
       {/* Buttons */}
       <View style={{flex: 3}}>
-        <View style={{flexDirection: 'row'}}>
+        {currentSliceIndex === slides.length - 1 ? (
           <TouchableOpacity
+            style={[styles.btn, {width: 312}]}
             activeOpacity={0.7}
-            onPress={skip}
-            style={[
-              styles.btn,
-              {
-                backgroundColor: 'transparent',
-                borderWidth: 1,
-                borderColor: 'white',
-              },
-            ]}>
+            onPress={() => navigation.replace('LoginScreen')}>
             <Text style={{fontWeight: 'bold', color: 'white', fontSize: 16}}>
-              Saltar
+              Iniciar
             </Text>
           </TouchableOpacity>
-          <View style={{width: 15}} />
-          <TouchableOpacity
-            style={[styles.btn]}
-            activeOpacity={0.7}
-            onPress={nextSlide}>
-            <Text style={{fontWeight: 'bold', color: 'white', fontSize: 16}}>
-              Siguiente
-            </Text>
-          </TouchableOpacity>
-        </View>
+        ) : (
+          <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={skip}
+              style={[
+                styles.btn,
+                {
+                  backgroundColor: 'transparent',
+                  borderWidth: 1,
+                  borderColor: 'white',
+                },
+              ]}>
+              <Text style={{fontWeight: 'bold', color: 'white', fontSize: 16}}>
+                Saltar
+              </Text>
+            </TouchableOpacity>
+            <View style={{width: 15}} />
+            <TouchableOpacity
+              style={[styles.btn]}
+              activeOpacity={0.7}
+              onPress={nextSlide}>
+              <Text style={{fontWeight: 'bold', color: 'white', fontSize: 16}}>
+                Siguiente
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -120,8 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   btn: {
-    flex: 1,
-    height: 50,
+    height: 52,
     width: 150,
     borderRadius: 10,
     backgroundColor: Colors.primary,

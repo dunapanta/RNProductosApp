@@ -27,10 +27,11 @@ const Navigator = () => {
         },
       }}>
       {status === 'authenticated' ? (
-        //<Stack.Screen name="ProductsNavigator" component={ProductsNavigator} />
-        <Stack.Screen name="OnBoardScreen" component={OnBoardScreen} />
+        <Stack.Screen name="ProductsNavigator" component={ProductsNavigator} />
+        
       ) : (
         <>
+        <Stack.Screen name="OnBoardScreen" component={OnBoardScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
         </>

@@ -5,9 +5,13 @@ import Colors from '../constants/Colors';
 import slides from '../constants/OnboardSlides';
 import {Slide} from '../components/Slide';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {StackScreenProps} from '@react-navigation/stack';
+
+interface Props extends StackScreenProps<any, any> {}
 
 const {width} = Dimensions.get('window');
-export const OnBoardScreen = () => {
+
+export const OnBoardScreen = ({navigation}: Props) => {
   const {top} = useSafeAreaInsets();
   const ref = useRef<any>(null);
   const [currentSliceIndex, setCurrentSliceIndex] = useState(0);
@@ -53,6 +57,7 @@ export const OnBoardScreen = () => {
             currentSliceIndex={currentSliceIndex}
             nextSlide={goNextSlide}
             skip={skipSlides}
+            navigation={navigation}
           />
         )}
       />
