@@ -1,11 +1,31 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
-import {View, StyleSheet, useWindowDimensions, TextInput} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  useWindowDimensions,
+  TextInput,
+  Dimensions,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
+import {useDebounce} from '../hooks/useDebounce';
 
-export const SearchInput = () => {
-  const {width, height} = useWindowDimensions();
+const {width} = Dimensions.get('window');
+
+interface Props {
+  onDebounce: (value: string) => void;
+}
+
+export const SearchInput = ({onDebounce}: Props) => {
+  const [text, setText] = useState('');
+
+  const debouncedText = useDebounce(text);
+
+  useEffect(() => {
+    onDebounce(debouncedText);
+  }, [debouncedText]);
+
   return (
     <View style={{...styles.searchInput, width: width - 50}}>
       <Icon
@@ -13,7 +33,14 @@ export const SearchInput = () => {
         size={30}
         style={{marginLeft: 20, color: Colors.secondaryDark}}
       />
-      <TextInput placeholder="Buscar" style={styles.textInput} />
+      <TextInput
+        value={text}
+        onChangeText={setText}
+        placeholder="Buscar"
+        style={styles.textInput}
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
     </View>
   );
 };
