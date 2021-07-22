@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
 import {
+  Text,
   View,
   StyleSheet,
   ScrollView,
@@ -16,6 +17,7 @@ import {ProductsList} from '../components/ProductsList';
 import {SearchInput} from '../components/SearchInput';
 import {ProductContext} from '../context/ProductContext';
 import Colors from '../constants/Colors';
+import {SearchList} from './SearchList';
 
 export const ProductsScreen = () => {
   const {products} = useContext(ProductContext);
@@ -32,6 +34,9 @@ export const ProductsScreen = () => {
       <SearchInput onDebounce={value => setTerm(value)} />
       {loading ? (
         <ActivityIndicator size={50} color={Colors.secondary} />
+      ) : searchProducts.length > 0 ? (
+          <SearchList searchProducts={searchProducts} />
+    
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
           <FilterList />

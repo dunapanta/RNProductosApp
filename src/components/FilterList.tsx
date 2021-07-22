@@ -5,7 +5,7 @@ import Colors from '../constants/Colors';
 
 const categorias = ['Todos', 'Populares', 'Más Vendidos', 'Mejor Puntuados'];
 export const FilterList = () => {
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(1);
   return (
     <ScrollView
       horizontal
@@ -43,7 +43,7 @@ export const FilterList = () => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
-    marginTop: 10,
+    marginTop: 20,
   },
   categoryListText: {
     fontSize: 18,

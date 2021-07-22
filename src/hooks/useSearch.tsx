@@ -15,6 +15,7 @@ export const useSearch = () => {
 
   useEffect(() => {
     if (term.length === 0) {
+      setLoading(false);
       return setSearchProducts([]);
     }
     searchingProducts();

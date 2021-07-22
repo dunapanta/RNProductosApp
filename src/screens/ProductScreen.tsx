@@ -8,7 +8,7 @@ import {
   StyleSheet,
   ImageBackground,
   StatusBar,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   detailsText: {
     lineHeight: 20,
-    color: Colors.secondaryLigth,
+    color: Colors.secondaryDark,
   },
   priceContainer: {
     marginTop: 20,
