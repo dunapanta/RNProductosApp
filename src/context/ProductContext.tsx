@@ -61,7 +61,7 @@ export const ProductProvider = ({children}: any) => {
       setProducts([...products, resp.data]);
       return resp.data;
     } catch (err) {
-      console.log('ERROR NOOOO', err.response.data.errors[0].msg);
+      console.log('ERROR NOOOO', err.response.data);
     }
   };
 
@@ -85,7 +85,7 @@ export const ProductProvider = ({children}: any) => {
         }),
       );
     } catch (err) {
-      console.log(err.response.data.errors[0].msg);
+      console.log(err.response.data);
     }
   };
   const deleteProduct = async (id: string) => {};

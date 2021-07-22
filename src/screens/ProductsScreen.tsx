@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   StatusBar,
+  Text,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -44,12 +45,26 @@ export const ProductsScreen = () => {
           return <SearchList searchProducts={searchProducts} />;
         }
         if (searchProducts.length === 0 && term.length > 0 && !loading) {
-          console.log('Length Ter', term.length);
           return (
-            <Image
-              source={require('../assets/empty.png')}
-              style={{width: 150, height: 150,}}
-            />
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 50,
+              }}>
+              <Image
+                source={require('../assets/empty.png')}
+                style={{width: 200, height: 200}}
+              />
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  color: Colors.secondaryDark,
+                }}>
+                Producto no encontrado
+              </Text>
+            </View>
           );
         }
         return (

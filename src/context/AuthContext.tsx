@@ -115,7 +115,7 @@ export const AuthProvider = ({children}: any) => {
       //Guardar token
       await AsyncStorage.setItem('token', resp.data.token);
     } catch (err) {
-      console.log(err.response.data);
+      //console.log(err.response.data);
       dispatch({
         type: 'addError',
         payload: err.response.data.msg || 'Datos Incorrectos',
