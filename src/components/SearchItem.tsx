@@ -84,7 +84,8 @@ const styles = StyleSheet.create({
     elevation: 2,
 
     marginRight: 10,
-    marginTop: 14,
+    marginTop: 10,
+    marginBottom : 3,
     borderRadius: 15,
     backgroundColor: 'white',
   },

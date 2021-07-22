@@ -35,5 +35,6 @@ export const useSearch = () => {
     searchProducts,
     loading,
     setTerm,
+    term
   };
 };

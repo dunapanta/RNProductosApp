@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {
-  Text,
+  Image,
   View,
   StyleSheet,
   ScrollView,
@@ -23,27 +23,43 @@ export const ProductsScreen = () => {
   const {products} = useContext(ProductContext);
 
   const {top} = useSafeAreaInsets();
-  const {searchProducts, loading, setTerm} = useSearch();
-
-  console.log(searchProducts);
+  const {searchProducts, loading, term, setTerm} = useSearch();
 
   return (
     <View style={{top: top + 5, ...styles.container}}>
       <StatusBar backgroundColor="white" barStyle="dark-content" />
       <HeaderProducts />
       <SearchInput onDebounce={value => setTerm(value)} />
-      {loading ? (
-        <ActivityIndicator size={50} color={Colors.secondary} />
-      ) : searchProducts.length > 0 ? (
-          <SearchList searchProducts={searchProducts} />
-    
-      ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <FilterList />
-          <ProductsList products={products} />
-          <LastProductsList products={products} />
-        </ScrollView>
-      )}
+      {(() => {
+        if (loading) {
+          return (
+            <ActivityIndicator
+              style={{marginTop: 50}}
+              size={50}
+              color={Colors.secondary}
+            />
+          );
+        }
+        if (searchProducts.length > 0 && !loading) {
+          return <SearchList searchProducts={searchProducts} />;
+        }
+        if (searchProducts.length === 0 && term.length > 0 && !loading) {
+          console.log('Length Ter', term.length);
+          return (
+            <Image
+              source={require('../assets/empty.png')}
+              style={{width: 150, height: 150,}}
+            />
+          );
+        }
+        return (
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <FilterList />
+            <ProductsList products={products.slice(0, 8)} />
+            <LastProductsList products={products} />
+          </ScrollView>
+        );
+      })()}
     </View>
   );
 };
