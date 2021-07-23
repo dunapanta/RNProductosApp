@@ -23,3 +23,8 @@
 ```
 
 - `import {launchCamera, launchImageLibrary} from 'react-native-image-picker';`
+
+## Clase 366 Splash Screen
+
+- `https://github.com/crazycodeboy/react-native-splash-screen`
+- `yarn add react-native-splash-screen`
