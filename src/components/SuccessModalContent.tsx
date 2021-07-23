@@ -16,7 +16,7 @@ import {ModalPopup} from './ModalPopup';
 
 interface Props {
   titleHead?: string;
-  statusBarColor: string;
+  statusBarColor?: string;
 }
 
 export const SuccessModalContent = ({titleHead, statusBarColor}: Props) => {

@@ -18,11 +18,12 @@ import {ProductStackParams} from '../navigation/ProductsNavigator';
 import {useProductData} from '../hooks/useProductData';
 import {ModalContext} from '../context/ModalContext';
 import {AuthContext} from '../context/AuthContext';
+import {SuccessModalContent} from '../components/SuccessModalContent';
 
 interface Props extends StackScreenProps<ProductStackParams, 'ProductScreen'> {}
 export const ProductScreen = ({navigation, route}: Props) => {
   const product = route.params as Producto;
-  const {hideModal} = useContext(ModalContext);
+  const {hideModal, visible, openModal} = useContext(ModalContext);
   const {producto} = useProductData(product);
   const {user} = useContext(AuthContext);
 
@@ -96,7 +97,17 @@ export const ProductScreen = ({navigation, route}: Props) => {
             <Text style={styles.price}>${producto.precio}</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.btn} activeOpacity={0.8}>
+        {/* Modal */}
+        {visible && (
+          <SuccessModalContent
+            titleHead="Pedido Registrado"
+            statusBarColor="rgba(0,0,0,0.5)"
+          />
+        )}
+        <TouchableOpacity
+          onPress={openModal}
+          style={styles.btn}
+          activeOpacity={0.8}>
           <Text style={styles.btnText}>Ordenar Producto</Text>
         </TouchableOpacity>
       </View>
